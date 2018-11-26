@@ -27,7 +27,6 @@ import pandas as pd
 resolution = 110000
 resonumber = "110"
 linerange= "UVES"
-#rangename= "smallerLR"
 
 #######################
 
