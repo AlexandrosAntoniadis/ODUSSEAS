@@ -8,24 +8,47 @@ Created on Fri Dec  7 15:15:35 2018
 import New_dataset 
 import MachineLearning
 
-######### SETTINGS ##############
+######### SETTINGS ALL##############
+
+#regression = 'ridge' # choose the ML model: linear, ridge, ridgecv. Recommended: ridge
+#inst = 'UVES' # put the name of the instrument of unknown stars
+#resolution = 110000 #set the resolution of unknown spectra
+#resonumber = '110' # set resolution number in k units
+#convolution_of_new = "yes" #convolve the unknown stars to their own resolution if it is comparable to the 115k of the HARPS dataset
+#linerange= "53to68" # the range of the linelist created for the spectra of the unknown stars. for example its total name should be: 53to68lines.rdb)
+#option = "justML" # choose "measure" for both measuring the EWs of new stars and get parameters with ML, or "justML" to get results with different run/model 
+
+########################
+
+######## SETTINGS ##############
 
 regression = 'ridge' # choose the ML model: linear, ridge, ridgecv. Recommended: ridge
-inst = 'UVES' # put the name of the instrument of unknown stars
-resolution = 110000 #set the resolution of unknown spectra
-resonumber = '110' # set resolution number in k units
-convolution_of_new = "yes" #convolve the unknown stars to their own resolution if it is comparable to the 115k of the HARPS dataset
-linerange= "53to68" # the range of the linelist created for the spectra of the unknown stars. for example its total name should be: 53to68lines.rdb)
+#inst = 'UVES' # put the name of the instrument of unknown stars
+#resolution = 110000 #set the resolution of unknown spectra
+ # set resolution number in k units
+convo_limit = 100000
+#convolution_of_new = "yes" #convolve the unknown stars to their own resolution if it is comparable to the 115k of the HARPS dataset
+#linerange= "53to68" # the range of the linelist created for the spectra of the unknown stars. for example its total name should be: 53to68lines.rdb)
 option = "justML" # choose "measure" for both measuring the EWs of new stars and get parameters with ML, or "justML" to get results with different run/model 
 
 ########################
 
+#resonumber = str(resolution/1000)
+
 if option == "measure" :
-    New_dataset.EWmeasurements(convolution_of_new, resolution, resonumber, inst, linerange)     
+    New_dataset.EWmeasurements(convo_limit)     
     
-    MachineLearning.ML(regression,convolution_of_new, resolution, resonumber, inst, linerange)
+    MachineLearning.ML(regression)
     
 elif option =="justML" :
-    MachineLearning.ML(regression,convolution_of_new, resolution, resonumber, inst, linerange)
+    MachineLearning.ML(regression)
     
+elif option == "measureAll" :
+    New_dataset.EWmeasurementsAll(convolution_of_new, resolution, resonumber, inst, linerange)     
     
+    MachineLearning.MLAll(regression,convolution_of_new, resolution, resonumber, inst, linerange)
+    
+elif option =="justMLAll" :
+    MachineLearning.MLAll(regression,convolution_of_new, resolution, resonumber, inst, linerange)
+    
+        
