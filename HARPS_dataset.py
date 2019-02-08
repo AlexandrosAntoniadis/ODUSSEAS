@@ -21,9 +21,11 @@ import pandas as pd
 
 convolve_now = "yes" # convolve now if you want to add a new resolution dataset for the first time
 resolution = 75000 # set the resolution that you want to convolve the HARPS stars.
-resonumber = "75" # set the resonumber (the same as above in k units) to be added in the names of the files.
+#resonumber = "75" # set the resonumber (the same as above in k units) to be added in the names of the files.
 
 #######################
+
+resonumber = str(resolution)
 
 def convolve_data(fname, resolution, resonumber):
 
@@ -152,7 +154,7 @@ print (table_T[:,0])
     
 # add the parameters to train and test
     
-df = pd.read_csv("myoriginalparameters.dat", sep=" ", header = 0)
+df = pd.read_csv("originalparameters.dat", sep=" ", header = 0)
 
 df.loc[:,"starname"] = df.Star.str.split("_").str[0].str.strip() 
 
