@@ -32,6 +32,8 @@ def _parser():
 
 def read_data(fname):
     
+    if np.shape(fname)==(2,):
+        fname=fname[0]
     flux = fits.getdata(fname)
     hdr = fits.getheader(fname)
     w0, dw, N = hdr['CRVAL1'], hdr['CDELT1'], hdr['NAXIS1']
@@ -50,6 +52,7 @@ def cut_data(w, f, w1=None, w2=None):
 
 def area_between(f, g, dx):
     
+    # https://stackoverflow.com/questions/25439243/find-the-area-between-two-curves-ploted-in-matplotlib-fill-between-area
    
     h = abs(g-f)/g
     A = np.trapz(h, dx=dx)
