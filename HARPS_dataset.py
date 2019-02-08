@@ -21,7 +21,6 @@ import pandas as pd
 
 convolve_now = "yes" # convolve now if you want to add a new resolution dataset for the first time
 resolution = 75000 # set the resolution that you want to convolve the HARPS stars.
-#resonumber = "75" # set the resonumber (the same as above in k units) to be added in the names of the files.
 
 #######################
 

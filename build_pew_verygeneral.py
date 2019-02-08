@@ -51,13 +51,10 @@ def cut_data(w, f, w1=None, w2=None):
 
 
 def area_between(f, g, dx):
-    
-    # https://stackoverflow.com/questions/25439243/find-the-area-between-two-curves-ploted-in-matplotlib-fill-between-area
    
     h = abs(g-f)/g
     A = np.trapz(h, dx=dx)
-    # plt.plot(h)
-    # plt.show()
+    
     return A
 
 
@@ -65,7 +62,6 @@ def area_between(f, g, dx):
 def pseudo_EW(fname, w1, w2, dw=0.4, plot=False):
     wavelength, flux = read_data(fname)
     wavelength, flux = cut_data(wavelength, flux, w1, w2)
-    #flux /= np.median(flux)  # Crude normalization
 
     # Find central wavelength
     idx_fmin = np.argmin(flux)
