@@ -9,6 +9,7 @@ Created on Fri May 25 20:49:41 2018
 from __future__ import division
 import numpy as np
 import pandas as pd
+import os
 from time import time
 import matplotlib.pyplot as plt
 from sklearn import linear_model
@@ -45,6 +46,12 @@ def ML(regression):
     directory_name = 'EWmyresults'
     res_file=open('Parameter_Results.dat', 'w')
     res_file.write("# newstars [Fe/H] Teff err_[Fe/H] err_Teff var_score r2_score \n")
+    
+    MLplots_folder = 'Train_Test_Plots'
+
+    if not os.path.exists(MLplots_folder):
+        os.makedirs(MLplots_folder)  
+             
     for i in np.arange(len(filepaths)):
         
 
@@ -57,8 +64,11 @@ def ML(regression):
         y = df.columns.values[-2:]
         
         labels = df[names]
-                
-                        
+        
+        
+        
+        
+        
         
         newlines = np.loadtxt('./'+directory_name+filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')+'centrallines.dat',dtype=str)
         
@@ -97,6 +107,7 @@ def ML(regression):
         
         reg.fit(x_train, y_train)
         
+        #for saving the model run the next line. For keeping current,comment it out
         joblib.dump(reg, 'savedmodel.pkl')
         
         y_pred_test = reg.predict(x_test)
@@ -117,9 +128,9 @@ def ML(regression):
         r2score = r2_score(y_test, y_pred_test)
         
         
-        reg = joblib.load('savedmodel.pkl') 
+        reg = joblib.load('savedmodel.pkl') #for loading the saved model
         
-        newdf = reg.predict(newdf) 
+        newdf = reg.predict(newdf) #applying the saved model to the new stars
         
         finalresults = pd.concat([newlabels, pd.DataFrame(newdf)], axis=1)
         print(finalresults)
@@ -168,8 +179,8 @@ def ML(regression):
         plt.xlabel("AA value", fontsize=set_res)
         plt.plot((-0.8,0.8),(-0.8,0.8),'--b') # for Fe/H
         plt.plot(train_givenvalues.values[:,1], train_predvalues.values[:,1],'o')
-        plt.show()    
-        
+        #plt.show()    
+        plt.savefig("./"+MLplots_folder+"/"+starname+'_FeH_train_comparison.png')
         # plotting the train Teff
         set_res = 12
         
@@ -179,7 +190,9 @@ def ML(regression):
         plt.xlabel("AA value", fontsize=set_res)
         plt.plot((2000,4000),(2000,4000),'--b') #for Teff    
         plt.plot(train_givenvalues.values[:,2], train_predvalues.values[:,2],'o')    
-        plt.show()
+        #plt.show()
+        plt.savefig("./"+MLplots_folder+"/"+starname+'_Teff_train_comparison.png')
+        
             
         # plotting the test FeH
         set_res = 12
@@ -190,7 +203,8 @@ def ML(regression):
         plt.xlabel("AA value", fontsize=set_res)
         plt.plot((-0.8,0.8),(-0.8,0.8),'--b') # for FeH
         plt.plot(test_givenvalues.values[:,1], test_predvalues.values[:,1],'o')
-        plt.show()    
+        #plt.show() 
+        plt.savefig("./"+MLplots_folder+"/"+starname+'_FeH_test_comparison.png')
         
         # plotting the test Teff
         set_res = 12
@@ -201,7 +215,6 @@ def ML(regression):
         plt.xlabel("AA value", fontsize=set_res)
         plt.plot((2000,4000),(2000,4000),'--b') #for Teff
         plt.plot(test_givenvalues.values[:,2], test_predvalues.values[:,2],'o')
-        plt.show()
-    res_file.close()
-    
-        
+        #plt.show()
+        plt.savefig("./"+MLplots_folder+"/"+starname+'_Teff_test_comparison.png')
+    res_file.close()        
