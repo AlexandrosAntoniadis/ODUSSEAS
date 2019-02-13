@@ -21,7 +21,7 @@ For comparison, the reference values according to their HARPS spectra, are the f
 Gl402 = 0.06 & 2984 ;
 GJ163 = 0.06 & 3274 ;
 GJ1061 = -0.02 & 2938 ;
-GJ514 = -0.16 & 3539
+Gl514 = -0.16 & 3539
 
 
 The "HARPSdataset.py" is the code that creates the library of the M dwarfs from the HARPS sample, for any resolution we want to work at.
