@@ -171,50 +171,57 @@ def ML(regression):
         starname = filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')
         
         
-        set_res = 12
+        set_res = 15
         
         plt.figure(figsize=([set_res,set_res]))
-        plt.title(starname+' [Fe/H]'+' '+'train'+' '+'comparison')
-        plt.ylabel("ML value", fontsize=set_res)
-        plt.xlabel("AA value", fontsize=set_res)
+        plt.title(starname+' [Fe/H]'+' '+'train'+' '+'comparison', fontsize=set_res*1.2)
+        plt.ylabel("ML value", fontsize=set_res*1.5)
+        plt.xlabel("AA value", fontsize=set_res*1.5)
+        plt.tick_params(axis='both',labelsize=set_res*1.5)
         plt.plot((-0.8,0.8),(-0.8,0.8),'--b') # for Fe/H
         plt.plot(train_givenvalues.values[:,1], train_predvalues.values[:,1],'o')
         #plt.show()    
-        plt.savefig("./"+MLplots_folder+"/"+starname+'_FeH_train_comparison.png')
+        plt.savefig("./"+MLplots_folder+"/"+starname+'_FeH_train_comparison.png', bbox_inches='tight')
+        plt.tight_layout()
         # plotting the train Teff
-        set_res = 12
+        set_res = 15
         
         plt.figure(figsize=([set_res,set_res]))
-        plt.title(starname+' Teff'+' '+'train'+' '+'comparison')
-        plt.ylabel("ML value", fontsize=set_res)
-        plt.xlabel("AA value", fontsize=set_res)
+        plt.title(starname+' Teff'+' '+'train'+' '+'comparison', fontsize=set_res*1.2)
+        plt.ylabel("ML value", fontsize=set_res*1.5)
+        plt.xlabel("AA value", fontsize=set_res*1.5)
+        plt.tick_params(axis='both',labelsize=set_res*1.5)
         plt.plot((2000,4000),(2000,4000),'--b') #for Teff    
         plt.plot(train_givenvalues.values[:,2], train_predvalues.values[:,2],'o')    
         #plt.show()
-        plt.savefig("./"+MLplots_folder+"/"+starname+'_Teff_train_comparison.png')
-        
+        plt.savefig("./"+MLplots_folder+"/"+starname+'_Teff_train_comparison.png', bbox_inches='tight')
+        plt.tight_layout()
             
         # plotting the test FeH
-        set_res = 12
+        set_res = 15
         
         plt.figure(figsize=([set_res,set_res]))
-        plt.title(starname+' [Fe/H]'+' '+'test'+' '+'comparison')
-        plt.ylabel("ML value", fontsize=set_res)
-        plt.xlabel("AA value", fontsize=set_res)
+        plt.title(starname+' [Fe/H]'+' '+'test'+' '+'comparison', fontsize=set_res*1.2)
+        plt.ylabel("ML value", fontsize=set_res*1.5)
+        plt.xlabel("AA value", fontsize=set_res*1.5)
+        plt.tick_params(axis='both',labelsize=set_res*1.5)
         plt.plot((-0.8,0.8),(-0.8,0.8),'--b') # for FeH
         plt.plot(test_givenvalues.values[:,1], test_predvalues.values[:,1],'o')
         #plt.show() 
-        plt.savefig("./"+MLplots_folder+"/"+starname+'_FeH_test_comparison.png')
+        plt.savefig("./"+MLplots_folder+"/"+starname+'_FeH_test_comparison.png', bbox_inches='tight')
+        plt.tight_layout()
         
         # plotting the test Teff
-        set_res = 12
+        set_res = 15
         
         plt.figure(figsize=([set_res,set_res]))
-        plt.title(starname+' Teff'+' '+'test'+' '+'comparison')
-        plt.ylabel("ML value", fontsize=set_res)
-        plt.xlabel("AA value", fontsize=set_res)
+        plt.title(starname+' Teff'+' '+'test'+' '+'comparison', fontsize=set_res*1.2)
+        plt.ylabel("ML value", fontsize=set_res*1.5)
+        plt.xlabel("AA value", fontsize=set_res*1.5)
+        plt.tick_params(axis='both',labelsize=set_res*1.5)
         plt.plot((2000,4000),(2000,4000),'--b') #for Teff
         plt.plot(test_givenvalues.values[:,2], test_predvalues.values[:,2],'o')
         #plt.show()
-        plt.savefig("./"+MLplots_folder+"/"+starname+'_Teff_test_comparison.png')
+        plt.savefig("./"+MLplots_folder+"/"+starname+'_Teff_test_comparison.png', bbox_inches='tight')
+        plt.tight_layout()
     res_file.close()        
