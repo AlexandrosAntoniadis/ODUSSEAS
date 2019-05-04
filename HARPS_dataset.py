@@ -19,7 +19,7 @@ import pandas as pd
 
 ######### SETTINGS ############## 
 
-convolve_now = "yes" # convolve now if you want to add a new resolution dataset for the first time
+convolve_now = "yes" # convolve now if you want to add a new resolution dataset
 resolution = 75000 # set the resolution that you want to convolve the HARPS stars.
 
 #######################
@@ -151,7 +151,7 @@ print(table_T[0])
 np.savetxt('conv'+resonumber+'goodHARPS_transposed.csv', table_T, delimiter=',', fmt='%s')
 print (table_T[:,0]) 
     
-# add the parameters to train and test
+# add the parameters as references for the ML to train and test
     
 df = pd.read_csv("originalparameters.dat", sep=" ", header = 0)
 
@@ -160,7 +160,7 @@ df.loc[:,"starname"] = df.Star.str.split("_").str[0].str.strip()
 
 df2 = pd.read_csv("conv"+resonumber+"goodHARPS_transposed.csv", sep=",")
 
-df2.loc[:,"starname"] = df2.names.str.split("_").str[1].str.strip()  # it assumes the files start with "results_"
+df2.loc[:,"starname"] = df2.names.str.split("_").str[1].str.strip()  # since these files start with "result_"
 
 
 df3 = pd.merge(df2, df, on="starname", how="outer")
