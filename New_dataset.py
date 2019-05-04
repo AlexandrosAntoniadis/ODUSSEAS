@@ -11,6 +11,7 @@ import numpy as np
 import os
 from astropy.io import fits
 from PyAstronomy import pyasl
+from scipy.interpolate import interp1d
 
 #####################
 
@@ -40,19 +41,25 @@ def convolve_data(fname, resolution):
     w0, dw, N = hdr['CRVAL1'], hdr['CDELT1'], hdr['NAXIS1']
     wavelength = w0 + dw * np.arange(N)
     
+    if round(dw,4) != 0.010:
+        cdelt1 = 0.010
+        f2 = interp1d(wavelength, flux, kind='linear')
+        wavelength = np.arange(wavelength[0], wavelength[-1], cdelt1)
+        flux = f2(wavelength)
+        hdr['CDELT1']=0.010
     
     newflux = pyasl.instrBroadGaussFast(wavelength, flux, resolution, edgeHandling="firstlast", fullout=False, maxsig=None)
     
     fits.writeto(fname.replace('.fits', '')+'final'+'.fits', newflux, hdr, overwrite=True)
 
 
-def EWmeasurements(convo_limit, convolution_of_new = "yes"):
+def EWmeasurements(convo_limit, convolution = "yes"):
 
     spectralist = np.loadtxt('1Dfilelist.dat', dtype=str)
     filepaths = spectralist[:,0]
     resolution = spectralist[:,1]
     
-    if convolution_of_new == "yes" :
+    if convolution == "yes" :
     
         for i in np.arange(len(filepaths)):
             if np.float(resolution[i]) > convo_limit and np.float(resolution[i]) < 115000:
@@ -183,7 +190,7 @@ def EWmeasurements(convo_limit, convolution_of_new = "yes"):
             
             table_T[0,0] = table_T[0,0].replace('# ','')
             
-            print(table_T[0])
+            #print(table_T[0])
            
             if np.shape(filepaths[i])==(2,):
                   np.savetxt('./'+directory_name+filepaths[i,0].replace('.fits','').replace('spectra/'+'newstars/','')+'_newstars.csv', table_T, delimiter=',', fmt='%s')
@@ -191,6 +198,6 @@ def EWmeasurements(convo_limit, convolution_of_new = "yes"):
                   np.savetxt('./'+directory_name+filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')+'_newstars.csv', table_T, delimiter=',', fmt='%s')
        
            
-            print (table_T[:,0])    
+            #print (table_T[:,0])    
  
 
