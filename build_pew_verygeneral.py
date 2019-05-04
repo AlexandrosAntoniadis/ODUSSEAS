@@ -10,6 +10,8 @@ import argparse
 import numpy as np
 from astropy.io import fits
 import matplotlib.pyplot as plt
+from scipy.interpolate import interp1d
+from PyAstronomy import pyasl
 
 plt.rcParams['xtick.direction'] = 'in'
 plt.rcParams['ytick.direction'] = 'in'
@@ -38,6 +40,13 @@ def read_data(fname):
     hdr = fits.getheader(fname)
     w0, dw, N = hdr['CRVAL1'], hdr['CDELT1'], hdr['NAXIS1']
     wavelength = w0 + dw * np.arange(N)
+    
+    if round(dw,4) != 0.010:
+        cdelt1 = 0.010
+        f2 = interp1d(wavelength, flux, kind='linear')
+        wavelength = np.arange(wavelength[0], wavelength[-1], cdelt1)
+        flux = f2(wavelength)
+    
     return wavelength, flux
 
 
