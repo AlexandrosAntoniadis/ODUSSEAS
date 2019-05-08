@@ -1,10 +1,11 @@
-# clean
+# ODUSSEAS (Observing Dwarfs Using Stellar Spectroscopic Energy-Absorption Shapes):
+# A Machine-Learning Tool for the derivation of Teff and [Fe/H] of M Dwarf stars
 
-The "Mdwarfs.py" makes use of two algorithms: the "Newdataset.py", for the measurement the pseudo EWs of unknown spectra, and the "MachineLearning.py" for the derivation of their [Fe/H] and effective temperature. 
+"ODUSSEAS.py" makes use of two algorithms: the "Newdataset.py", for the measurement the pseudo EWs of unknown spectra, and the "MachineLearning.py" for the derivation of their [Fe/H] and effective temperature. 
 
-Inside the folder called "spectra", the user creates a second folder called "newstars", where he keeps the fits files of the 1D spectra of the unknown stars (having already corrected for radial velocity). It is important to note that during the construction of the 1D spectra, the user shall use during the interpolation the same step as of HARPS spectra (CDELT1 = 0.010), since the code must measure the area of the absorption line in the same consistent way (because the machine will learn based on the HARPS spectra), without loosing part of it due to non-existent points as the algorithm searches for the local left and right peaks of each line. These filepaths shall be written in the file called "1Dfilelist.dat" and next to them the resolution of each star.
+Inside the folder called "spectra", the user creates a second folder called "newstars", where he keeps the fits files of the 1D spectra of the unknown stars (having already corrected for radial velocity). These filepaths shall be written in the file called "1Dfilelist.dat" and next to them the resolution of each star.
 
-In the top of the code "Mdwarfs.py", there are three settings: 
+In the top of the code "ODUSSEAS.py", there are three settings: 
 
 1st) The main setting  is called "option". It shall be setted as "measure" if the user want to measure the new spectra for the first time, so the code firstly calculates their pseudo EWs and then derives the parameters by Machine Learning. 
 It can also be setted as "justML" in the case that the user wants to quickly try another run of Machine Learning. This action will produce new models applied for each star, which lead to new calculations of parameters. This can be done in the case that the first run does not return very high scores for a star measurement, so the user can try instantly another run that will produce a more precise model with more precise parameter values.
@@ -13,7 +14,7 @@ It can also be setted as "justML" in the case that the user wants to quickly try
 
 3rd) Finally, the user can change the regression type to be used by the Machine Learning process. The "ridge" is recommended, but also "ridgecv" and "linear" work at similar level of efficiency as well. 
 
-The workflow of "Mdwarfs.py" goes as following: 
+The workflow of "ODUSSEAS.py" goes as following: 
 The "New_dataset.py" reads the filepaths and resolutions in the "1Dfilelist.dat" and it proceeds to either convolve the unknown spectra to their own resolution based on the convolution limit or not. The final spectra -either convolved or not- are created in the same folder, while automatically the "final1Dfilelist.dat" is created and read by the code. The code reads the wavelength range of each star individually and proceeds to the measurement of the respective pseudo-EWs which are saved as individual csv files for each star. These csv files are used during the operation of the "MachineLearning.py" that returns the values of [Fe/H] and Teff, saved in a file called "Parameter_Results.dat". 
 
 ***For testing the above, we provide 1D spectra from 4 different spectrographs with different resolutions and the respective HARPS csv files for these resolutions, based on which the Machine Learning will predict the parameters. 
