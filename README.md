@@ -17,12 +17,14 @@ It can also be setted as "justML" in the case that the user wants to quickly try
 The workflow of "ODUSSEAS.py" goes as following: 
 The "New_dataset.py" reads the filepaths and resolutions in the "1Dfilelist.dat" and it proceeds to either convolve the unknown spectra to their own resolution based on the convolution limit or not. The final spectra -either convolved or not- are created in the same folder, while automatically the "final1Dfilelist.dat" is created and read by the code. The code reads the wavelength range of each star individually and proceeds to the measurement of the respective pseudo-EWs which are saved as individual csv files for each star. These csv files are used during the operation of the "MachineLearning.py" that returns the values of [Fe/H] and Teff, saved in a file called "Parameter_Results.dat". 
 
-***For testing the above, we provide 1D spectra from 4 different spectrographs with different resolutions and the respective HARPS csv files for these resolutions, based on which the Machine Learning will predict the parameters. 
+***For testing the above, we provide 1D spectra from 5 different spectrographs with different resolutions and the respective HARPS csv files for these resolutions, based on which the Machine Learning will predict the parameters. 
 For comparison, the reference values according to their HARPS spectra, are the following ( [Fe/H] & Teff] ): 
 Gl402 = 0.06 & 2984 ;
 GJ163 = 0.06 & 3274 ;
+GJ3470 = 0.08 & 3470 ;
 GJ1061 = -0.02 & 2938 ;
-Gl514 = -0.16 & 3539
+Gl514 = -0.16 & 3539 ;
+Gl408 = -0.47 & 3530 ;
 
 
 The "HARPSdataset.py" is the code that creates the library of the M dwarfs from the HARPS sample, for any resolution we want to work at.
