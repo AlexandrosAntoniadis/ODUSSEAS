@@ -88,7 +88,7 @@ wavelength_range = np.loadtxt('lines.rdb', skiprows=2)
 dw = 0.4
 plot = False
 
-directory_name = 'conv'+resonumber+'goodHARPS_EWmyresults'
+directory_name = 'res'+resonumber+'goodHARPS_EWmyresults'
 
 if not os.path.exists(directory_name):
     os.makedirs(directory_name)
@@ -110,7 +110,7 @@ for i in np.arange(size_of_filepaths):
     
 
    
-myData = "conv"+resonumber+"goodHARPS_EWmyresults"
+myData = "res"+resonumber+"goodHARPS_EWmyresults"
     
 our_data, our_datanames = Load_Data_Pairs(myData)
     
@@ -139,16 +139,16 @@ for i in range(len(our_datanames)):
     table[:, 1+i] = our_data[i]
     
         
-np.savetxt("conv"+resonumber+"goodHARPS_myEW.dat", table, header = headers, delimiter=",")   
+np.savetxt("res"+resonumber+"goodHARPS_myEW.dat", table, header = headers, delimiter=",")   
     
 
 # transpose
      
-table = np.loadtxt('conv'+resonumber+'goodHARPS_myEW.dat', dtype=str, delimiter=',', comments="?")    
+table = np.loadtxt('res'+resonumber+'goodHARPS_myEW.dat', dtype=str, delimiter=',', comments="?")    
 table_T = np.transpose(table)
 table_T[0,0] = table_T[0,0].replace('# ','')
 print(table_T[0])
-np.savetxt('conv'+resonumber+'goodHARPS_transposed.csv', table_T, delimiter=',', fmt='%s')
+np.savetxt('res'+resonumber+'goodHARPS_transposed.csv', table_T, delimiter=',', fmt='%s')
 print (table_T[:,0]) 
     
 # add the parameters as references for the ML to train and test
@@ -158,7 +158,7 @@ df = pd.read_csv("originalparameters.dat", sep=" ", header = 0)
 df.loc[:,"starname"] = df.Star.str.split("_").str[0].str.strip() 
 
 
-df2 = pd.read_csv("conv"+resonumber+"goodHARPS_transposed.csv", sep=",")
+df2 = pd.read_csv("res"+resonumber+"goodHARPS_transposed.csv", sep=",")
 
 df2.loc[:,"starname"] = df2.names.str.split("_").str[1].str.strip()  # since these files start with "result_"
 
@@ -167,4 +167,4 @@ df3 = pd.merge(df2, df, on="starname", how="outer")
 
 df3 = df3.drop(["starname", "Star"], axis=1)
 
-df3.to_csv("conv"+resonumber+"_goodEWPar.csv", sep=",", index=False) 
+df3.to_csv("res"+resonumber+"_goodEWPar.csv", sep=",", index=False) 
