@@ -108,8 +108,8 @@ def convolve_data(fname, resolution):
     fits.writeto(fname.replace('.fits', '')+'final'+'.fits', newflux, hdr, overwrite=True)
 
 
-def EWmeasurements(convo_limit, convolution = "yes",rv_cor=True):
-    
+def EWmeasurements(convolution = "yes",rv_cor=True):
+    convo_limit=100000
     spectralist = np.loadtxt('1Dfilelist.dat', dtype=str)
 #    print(np.shape(spectralist))
 #    if np.shape(spectralist)==(2,):
