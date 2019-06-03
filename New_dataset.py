@@ -53,8 +53,9 @@ def convolve_data(fname, resolution):
     fits.writeto(fname.replace('.fits', '')+'final'+'.fits', newflux, hdr, overwrite=True)
 
 
-def EWmeasurements(convo_limit, convolution = "yes"):
-
+def EWmeasurements(convolution = "yes"):
+    
+    convo_limit= 100000
     spectralist = np.loadtxt('1Dfilelist.dat', dtype=str)
     filepaths = spectralist[:,0]
     resolution = spectralist[:,1]
