@@ -23,12 +23,15 @@ if option == "measure" :
     
     MachineLearning.ML(regression)
 
-elif option =="measure_withrv":
-    New_dataset_withrv.EWmeasurements()     
-    
+elif option == "justML" :
     MachineLearning.ML(regression)
+    
+    
+#elif option =="measure_withrv":
+#    New_dataset_withrv.EWmeasurements()     
+    
+#    MachineLearning.ML(regression)
 
     
-elif option =="justML" :
-    MachineLearning.ML(regression)
+
     
