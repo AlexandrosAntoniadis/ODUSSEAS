@@ -15,7 +15,7 @@ This can be: "ridge" (recommended), "ridgecv", "linear", "multitasklasso", "mult
 
 Input: inside a folder with the path "spectra/newstars/", there should be the fits files of the 1D spectra of the unknown stars (corrected for R.V.). Their filepaths should be written in a text file called "1Dfilelist.dat", and next to them the resolution of each spectrum. See example below:
 
-spectra/newstars/starA.fits 115000
+spectra/newstars/starA.fits 115000 \n
 spectra/newstars/starB.fits 94600
 spectra/newstars/starC.fits 75000
 
