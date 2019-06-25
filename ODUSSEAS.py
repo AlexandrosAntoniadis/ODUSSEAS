@@ -5,8 +5,8 @@ Created on Fri Dec  7 15:15:35 2018
 
 @author: aantoniadis
 """
-import New_dataset 
-import New_dataset_withrv
+import New_data 
+import New_data_withrv
 import MachineLearning
 
 
@@ -19,7 +19,7 @@ regression = 'ridge' # choose the ML model: linear, ridge, ridgecv, multitasklas
 
 
 if option == "measure" :
-    New_dataset.EWmeasurements()     
+    New_data.EWmeasurements()     
     
     MachineLearning.ML(regression)
 
@@ -28,7 +28,7 @@ elif option == "justML" :
     
     
 #elif option =="measure_withrv":
-#    New_dataset_withrv.EWmeasurements()     
+#    New_data_withrv.EWmeasurements()     
     
 #    MachineLearning.ML(regression)
 
