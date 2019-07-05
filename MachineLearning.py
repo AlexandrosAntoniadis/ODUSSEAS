@@ -40,16 +40,15 @@ def ML(regression):
     elif regression == 'multitaskelasticnet':
         reg = linear_model.MultiTaskElasticNet(alpha=1) 
         
-#    elif regression == 'lasso':
-#        reg = linear_model.Lasso(alpha=1)       
-#    elif regression == 'lassolars':
-#        reg = linear_model.LassoLars(alpha=1)
         
      
     spectralist = np.loadtxt('final1Dfilelist.dat', dtype=str)
-    filepaths = spectralist[:,0]
-    resolution = spectralist[:,1]
-    
+    if spectralist.ndim > 1:
+        filepaths = spectralist[:,0]
+        resolution = spectralist[:,1]
+    else:
+        filepaths = [spectralist[0]]
+        resolution = [spectralist[1]]
     directory_name = 'EWmyresults'
     res_file=open('Parameter_Results.dat', 'w')
     res_file.write("# newstars [Fe/H] Teff err_[Fe/H] err_Teff var_score r2_score \n")
