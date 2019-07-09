@@ -18,13 +18,13 @@ from scipy.interpolate import interp1d
 
 def gaussian(x, mu, sig):
   return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
-
-def find_rv(wavelength, flux, mask_lines=[6081.40, 6085.23, 6090.20, 6102.71, 6108.12, 6111.70, 6122.21, 6162.17], delta_rv=200):
+#
+def find_rv(wavelength, flux, mask_lines=[5371.50, 5394.64, 5397.10, 5405.80, 5409.80, 5429.70, 5432.55, 5434.52, 5446.90, 5535.50, 6090.20, 6102.72, 6119.52, 6122.22], delta_rv=200):
   wave_mask = np.arange(mask_lines[0]-5., mask_lines[-1]+5., 0.01)
-  flux_mask = 1. + wave_mask * 0.
+  flux_mask = 1. + wave_mask * 0.0
   for line in mask_lines:
     flux_mask -= gaussian(wave_mask, line, 0.1)
-
+#
   ind_wi = np.where(wavelength < wave_mask[0])[0][-1]
   ind_wf = np.where(wavelength > wave_mask[-1])[0][0]
 
@@ -36,13 +36,13 @@ def find_rv(wavelength, flux, mask_lines=[6081.40, 6085.23, 6090.20, 6102.71, 61
   maxind = np.argmax(cc)
 
   plt.figure(1)
-  plt.plot(wave_t,flux_t)
+  plt.plot(wave_t,flux_t/np.median(flux_t))
   plt.plot(wave_mask,flux_mask)
   plt.figure(2)
   plt.plot(rv, cc)
-  plt.show()
-#  plt.plot(rv, cc, 'bp-')
-#  plt.plot(rv[maxind], cc[maxind], 'ro')
+#  plt.show()
+  plt.plot(rv, cc, 'bp-')
+  plt.plot(rv[maxind], cc[maxind], 'ro')
 #  plt.show()
   return rv[maxind]
 
@@ -52,16 +52,27 @@ def rv_correction(fname, cdelt1=0.010):
     hdr = fits.getheader(fname)
     w0, dw, N = hdr['CRVAL1'], hdr['CDELT1'], hdr['NAXIS1']
     wave = w0 + dw * np.arange(N)
-    
+#    harps_mask = np.loadtxt()
     rv=find_rv(wave, flux)
     
     print ("RV:", rv)
-    wave_rv = wave / (1 + rv/3.e5)
-    f2 = interp1d(wave_rv, flux, kind='linear')
-    wave_int = np.arange(wave_rv[0], wave_rv[-1], cdelt1)
-    hdr['CRVAL1'] = wave_rv[0]
-    flux_int = f2(wave_int)
-    fits.writeto(fname, flux_int, hdr, overwrite=True)
+    
+    if abs(rv)>=1:
+        
+    
+
+        wave_rv = wave / (1 + rv/3.e5)
+        f2 = interp1d(wave_rv, flux, kind='linear')
+        wave_int = np.arange(wave_rv[0], wave_rv[-1]-cdelt1, cdelt1)
+        hdr['CRVAL1'] = wave_rv[0]
+
+        flux_int = f2(wave_int)
+        flux = flux_int
+    else:
+        wave_rv = wave
+
+        hdr['CRVAL1'] = wave_rv[0]
+    fits.writeto(fname, flux, hdr, overwrite=True)
     
 
 def Load_Data_Pairs(data1):
@@ -100,40 +111,42 @@ def convolve_data(fname, resolution):
         hdr['CDELT1']=0.010
     
     
-    #plt.plot(wavelength, flux)
-    #plt.show()
     
     newflux = pyasl.instrBroadGaussFast(wavelength, flux, resolution, edgeHandling="firstlast", fullout=False, maxsig=None)
     
     fits.writeto(fname.replace('.fits', '')+'final'+'.fits', newflux, hdr, overwrite=True)
 
 
-def EWmeasurements(convolution = "yes",rv_cor=True):
-    convo_limit=100000
-    spectralist = np.loadtxt('1Dfilelist.dat', dtype=str)
-#    print(np.shape(spectralist))
-#    if np.shape(spectralist)==(2,):
-#        filepaths = spectralist[0]
-#        resolution = spectralist[1]
-#    else:
-#    print(type(spectralist))
-#    print(len(spectralist))
-#    input()
-    filepaths = spectralist[:,0]
-    resolution = spectralist[:,1]
+def EWmeasurements(rv_cor=True):
+        convo_limit= 100000
+        spectralist = np.loadtxt('1Dfilelist.dat', dtype=str)
+
+        if spectralist.ndim > 1:
+            filepaths = spectralist[:,0]
+            resolution = spectralist[:,1]
+        else:
+        
+            filepaths = [spectralist[0]]
+            resolution = [spectralist[1]]
+
     
-    if convolution == "yes" :
     
         for i in np.arange(len(filepaths)):
-#            print(i,len(filepaths),np.shape(filepaths))
+
+
             if np.float(resolution[i]) > convo_limit and np.float(resolution[i]) < 115000:
                 convolve_data(filepaths[i], np.float(resolution[i]))
+                
             else:
-                os.system("cp "+filepaths[i]+" "+filepaths[i].replace('.fits', '')+'final'+'.fits')
+               
+                os.system("cp "+filepaths[i]+" "+filepaths[i].replace('.fits', 'final')+''+'.fits')
+                
     
             if rv_cor == True:
-                rv_correction(filepaths[i].replace('.fits', '')+'final'+'.fits')
-                #input()
+
+                rv_correction(filepaths[i].replace('.fits', 'final')+''+'.fits')
+                
+
         name_of_input = '1Dfilelist.dat'
         name_of_output = 'final'+name_of_input
         
@@ -151,9 +164,6 @@ def EWmeasurements(convolution = "yes",rv_cor=True):
         
         input_list.close()
         
-        
-          
-        filepaths = np.loadtxt(name_of_output, dtype=str)
                 
         name_of_input = '1Dfilelist.dat'
         name_of_output = 'final'+name_of_input
@@ -166,12 +176,11 @@ def EWmeasurements(convolution = "yes",rv_cor=True):
         output_list.close()
         
         input_list.close()
-       
-       
+              
          
-        filepaths = np.loadtxt(name_of_output, dtype=str)
-                        
-        
+        #filepaths = np.loadtxt(name_of_output, dtype=str)
+        filepaths = np.loadtxt(name_of_output, dtype=str, unpack=True, usecols=(0,))               
+        print(filepaths)
         dw = 0.4
         plot = False
         
@@ -185,13 +194,13 @@ def EWmeasurements(convolution = "yes",rv_cor=True):
         except TypeError:
             filepaths = [str(filepaths)]
             size_of_filepaths = len(filepaths)
-                    
+        print(filepaths)              
         
         for i in np.arange(size_of_filepaths):
             wavelength_range = np.loadtxt('lines.rdb', skiprows=2)
             
             print (wavelength_range)
-            starwavelength, ___ =read_data(filepaths[i][0])
+            starwavelength, ___ =read_data(filepaths[i])
             starwavelength_min, starwavelength_max = np.min(starwavelength), np.max(starwavelength)
             w1_max, w2_min = np.max(wavelength_range[:,0]) , np.min(wavelength_range[:,1]) 
             
@@ -243,11 +252,11 @@ def EWmeasurements(convolution = "yes",rv_cor=True):
             table[:,1] = output
        
             if np.shape(filepaths[i])==(2,):
-                  headers = "newstars" + "," + filepaths[i,0].replace('.fits','').replace('spectra/'+'newstars/','')
-                  np.savetxt('./'+directory_name+filepaths[i,0].replace('.fits','').replace('spectra/'+'newstars/','')+"_EW.dat", table, header = headers, delimiter=",")
-                  table = np.loadtxt('./'+directory_name+filepaths[i,0].replace('.fits','').replace('spectra/'+'newstars/','')+'_EW.dat', dtype=str, delimiter=',', comments="?")
+                  headers = "newstars" + "," + filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')
+                  np.savetxt('./'+directory_name+filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')+"_EW.dat", table, header = headers, delimiter=",")
+                  table = np.loadtxt('./'+directory_name+filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')+'_EW.dat', dtype=str, delimiter=',', comments="?")
             else:
-                  headers = "newstars" + "," + filepaths[i,0].replace('.fits','').replace('spectra/'+'newstars/','')
+                  headers = "newstars" + "," + filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')
                   np.savetxt('./'+directory_name+filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')+"_EW.dat", table, header = headers, delimiter=",")
                   table = np.loadtxt('./'+directory_name+filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')+'_EW.dat', dtype=str, delimiter=',', comments="?") 
       
@@ -257,179 +266,10 @@ def EWmeasurements(convolution = "yes",rv_cor=True):
             
             table_T[0,0] = table_T[0,0].replace('# ','')
             
-            #print(table_T[0])
            
             if np.shape(filepaths[i])==(2,):
-                  np.savetxt('./'+directory_name+filepaths[i,0].replace('.fits','').replace('spectra/'+'newstars/','')+'_newstars.csv', table_T, delimiter=',', fmt='%s')
+                  np.savetxt('./'+directory_name+filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')+'_newstars.csv', table_T, delimiter=',', fmt='%s')
             else:
                   np.savetxt('./'+directory_name+filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')+'_newstars.csv', table_T, delimiter=',', fmt='%s')
        
-           
-            #print (table_T[:,0])    
 
-    
-    
-
-        
-#def EWmeasurementsAll(convolution_of_new, resolution, resonumber, inst, linerange):
-#
-#    filepaths = np.loadtxt(inst+'1Dfilelist.dat', dtype=str)
-#    
-#    if convolution_of_new == "yes" :
-#    
-#        for item in filepaths:
-#            convolve_data(item, resolution, resonumber)
-#        
-#        
-#        name_of_input = inst+'1Dfilelist.dat'
-#        name_of_output = 'conv'+resonumber+name_of_input
-#        
-#        input_list = open(name_of_input,'r')
-#        output_list = open(name_of_output,'w')
-#        for line in input_list:
-#            output_list.write(line.replace('.fits','conv'+resonumber+'.fits'))
-#        output_list.close()
-#        input_list.close()
-#        
-#          
-#        filepaths = np.loadtxt(name_of_output, dtype=str)
-#                
-#        
-#        wavelength_range = np.loadtxt(linerange+'lines.rdb', skiprows=2)
-#        dw = 0.4
-#        plot = False
-#        
-#        directory_name = 'conv'+resonumber+inst+linerange+'_EWmyresults'
-#        
-#        if not os.path.exists(directory_name):
-#            os.makedirs(directory_name)
-#                    
-#        try:
-#            size_of_filepaths = len(filepaths)
-#        except TypeError:
-#            filepaths = [str(filepaths)]
-#            size_of_filepaths = len(filepaths)
-#                    
-#        
-#        for i in np.arange(size_of_filepaths):
-#            output = np.empty(len(wavelength_range))    
-#            for j in np.arange(len(wavelength_range)):
-#                output[j] = pseudo_EW(fname=filepaths[i], w1=wavelength_range[j,0], w2=wavelength_range[j,1], dw=dw, plot=plot)
-#            np.savetxt('./'+directory_name+'/result_'+filepaths[i].replace('.fits','.dat').replace('spectra/'+inst+'1D/',''), output, fmt='%.2f')
-#            
-#                
-#        myData = 'conv'+resonumber+inst+linerange+"_EWmyresults"
-#            
-#            # Load data and return the pairs
-#        our_data, our_datanames = Load_Data_Pairs(myData)
-#            
-#        
-#        wcentral = np.empty(len(wavelength_range))
-#        
-#        for i in np.arange(len(wavelength_range)):
-#            winit = wavelength_range[i,0]
-#            wfin = wavelength_range[i,1]
-#            wcentral[i] = (winit + wfin)/2
-#        np.savetxt(linerange+'centrallines.dat', wcentral)
-#        lines = np.loadtxt(linerange+'centrallines.dat')
-#        table = np.empty((len(lines), len(our_datanames)+1))
-#        table[:,0] = lines
-#            
-#            
-#        headers = "newstars"
-#        for i in range(len(our_datanames)):
-#            headers = headers + "," + our_datanames[i]
-#            
-#            
-#            
-#        for i in range(len(our_datanames)):
-#            table[:, 1+i] = our_data[i]
-#            print(len(our_data[i]))
-#                
-#        np.savetxt('conv'+resonumber+inst+linerange+"_EW.dat", table, header = headers, delimiter=",")   
-#            
-#             # transpose
-#             
-#        table = np.loadtxt('conv'+resonumber+inst+linerange+'_EW.dat', dtype=str, delimiter=',', comments="?")
-#        
-#        table_T = np.transpose(table)
-#        table_T[0,0] = table_T[0,0].replace('# ','')
-#        print(table_T[0])
-#        np.savetxt('conv'+resonumber+inst+"_linerange"+linerange+'_newstars.csv', table_T, delimiter=',', fmt='%s')
-#        
-#            
-#        print (table_T[:,0])
-#    
-#    
-#    else :
-#        
-#        
-#        
-#        wavelength_range = np.loadtxt(linerange+'lines.rdb', skiprows=2)
-#        dw = 0.4
-#        plot = False
-#        
-#        directory_name = inst+linerange+'_EWmyresults'
-#        
-#        if not os.path.exists(directory_name):
-#            os.makedirs(directory_name)
-#            
-#        
-#        try:
-#            size_of_filepaths = len(filepaths)
-#        except TypeError:
-#            filepaths = [str(filepaths)]
-#            size_of_filepaths = len(filepaths)
-#        
-#            
-#        
-#        for i in np.arange(size_of_filepaths):
-#            output = np.empty(len(wavelength_range))    
-#            for j in np.arange(len(wavelength_range)):
-#                output[j] = pseudo_EW(fname=filepaths[i], w1=wavelength_range[j,0], w2=wavelength_range[j,1], dw=dw, plot=plot)
-#            np.savetxt('./'+directory_name+'/result_'+filepaths[i].replace('.fits','.dat').replace('spectra/'+inst+'1D/',''), output, fmt='%.2f')
-#            
-#        
-#        
-#        myData = inst+linerange+"_EWmyresults"
-#            
-#            # Load data and return the pairs
-#        our_data, our_datanames = Load_Data_Pairs(myData)
-#            
-#        #wavelength_range = np.loadtxt(linerange+'_lines.rdb', skiprows=2)
-#        wcentral = np.empty(len(wavelength_range))
-#        
-#        for i in np.arange(len(wavelength_range)):
-#            winit = wavelength_range[i,0]
-#            wfin = wavelength_range[i,1]
-#            wcentral[i] = (winit + wfin)/2
-#        np.savetxt(linerange+'centrallines.dat', wcentral)
-#        lines = np.loadtxt(linerange+'centrallines.dat')
-#        table = np.empty((len(lines), len(our_datanames)+1))
-#        table[:,0] = lines
-#            
-#            
-#        headers = "newstars"
-#        for i in range(len(our_datanames)):
-#            headers = headers + "," + our_datanames[i]
-#            
-#            
-#            
-#        for i in range(len(our_datanames)):
-#            table[:, 1+i] = our_data[i]
-#            print(len(our_data[i]))
-#                
-#        np.savetxt(inst+linerange+"_EW.dat", table, header = headers, delimiter=",")   
-#            
-#             # transpose
-#             
-#        table = np.loadtxt(inst+linerange+'_EW.dat', dtype=str, delimiter=',', comments="?")
-#        
-#        table_T = np.transpose(table)
-#        table_T[0,0] = table_T[0,0].replace('# ','')
-#        print(table_T[0])
-#        np.savetxt(inst+"_linerange"+linerange+'_newstars.csv', table_T, delimiter=',', fmt='%s')
-#        
-#            
-#        print (table_T[:,0])      
-                    
