@@ -5,7 +5,7 @@
 In its top, there is a setting called "option".
 
 It can be either:
-"measure" - the code both measures the pseudo EWs and derives the stellar parameters of unknown stars by machine learning ;
+"measure" or preferably "measure_withrv" - the code both measures the pseudo EWs and derives the stellar parameters of unknown stars by machine learning ;
 
 or:
 "justML" - the code derives the stellar parameters by machine learning (requires previously measured pseudo EWs). Use for quick runs, useful to produce new models applied to each star, leads to new calculations of parameters. To be used when the first run does not return very high scores for a star measurement, therefore used for producing more precise models and parameter values.
