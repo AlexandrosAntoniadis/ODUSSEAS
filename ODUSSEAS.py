@@ -27,10 +27,10 @@ elif option == "justML" :
     MachineLearning.ML(regression)
     
     
-#elif option =="measure_withrv":
-#    New_data_withrv.EWmeasurements()     
+elif option =="measure_withrv":
+    New_data_withrv.EWmeasurements()     
     
-#    MachineLearning.ML(regression)
+    MachineLearning.ML(regression)
 
     
 
