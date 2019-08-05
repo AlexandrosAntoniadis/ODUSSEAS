@@ -51,7 +51,8 @@ def ML(regression):
         resolution = [spectralist[1]]
     directory_name = 'EWmyresults'
     res_file=open('Parameter_Results.dat', 'w')
-    res_file.write("# newstars [Fe/H] Teff err_[Fe/H] err_Teff var_score r2_score \n")
+    res_file.write("# newstars [Fe/H] STD_FeH MAE_[Fe/H] Teff STD_Teff MAE_Teff EV_score R2_score \n")
+                   
     
     MLplots_folder = 'Model_Prediction_Plots'
 
@@ -60,7 +61,7 @@ def ML(regression):
              
     for i in np.arange(len(filepaths)):
                 
-        df = pd.read_csv('res'+resolution[i]+'_goodEWPar.csv')
+        df = pd.read_csv('res'+resolution[i]+'_RefEWPar.csv')
         df.dropna(axis=1, inplace=True)
         
         names = ['names']
@@ -95,73 +96,92 @@ def ML(regression):
         
         newdf = newdf.loc[:, newlines]
         
-                            
-        x_train, x_test, y_train, y_test = train_test_split(df_x, df_y, test_size=0.30)
+        FeH_list=[]
+        Teff_list=[]
+        MAE_FeH_list=[]
+        MAE_Teff_list=[]
+        Var_list=[]
+        R2_list=[]
         
-        labels_train = x_train[names]
-        labels_test = x_test[names]    
-        
-        x_train.drop(names,axis=1,inplace=True)
-        x_test.drop(names,axis=1,inplace=True)
-        
-        reg.fit(x_train, y_train)
-        
-        joblib.dump(reg, 'savedmodel.pkl')
-        
-        y_pred_test = reg.predict(x_test)
-        y_pred_train = reg.predict(x_train)
-        
-        
-        N = len(y_test)
-        starttime = time()
-        y_pred_test = reg.predict(x_test)
-        elapsedtime = time()
-        t = elapsedtime - starttime
-        
-        
-        #score_test = reg.score(x_test, y_test)
-        
-        variancescore = explained_variance_score(y_test, y_pred_test) 
-        
-        r2score = r2_score(y_test, y_pred_test)
-        
-        
-        reg = joblib.load('savedmodel.pkl') #loading the saved model
-        
-        newdf = reg.predict(newdf) #applying the saved model to the new star
-        
-        finalresults = pd.concat([newlabels, pd.DataFrame(newdf)], axis=1)
-        print(finalresults)
-        
-        print('Calculated parameters for {} stars in {:.2f}ms'.format(N, t*1e3))
-        #print ('test score:', score_test)
-        print ('variance score:', variancescore)
-        print ('r2score:', r2score)
-        
-        mae_train = mean_abso_error(y_train[:],y_pred_train[:]) 
-        mape_train = mean_absolute_percentage_error(y_train[:],y_pred_train[:]) 
-        
-        #print('Mean Absolute Error of Train : ' + str(mae_train))
-        #print('Mean Absolute Percentage Error of Train : '+ str(mape_train))
-        
-        mae_test = mean_abso_error(y_test[:],y_pred_test[:])
-        mape_test = mean_absolute_percentage_error(y_test[:],y_pred_test[:])
-        
-        print('Mean Absolute Error of Test : ' + str(mae_test))
-        #print('Mean Absolute Percentage Error of Test : '+ str(mape_test))
-                
-        
-        train_givenvalues = pd.concat([labels_train, y_train], axis=1)
-        train_givenvalues = train_givenvalues.reset_index(drop=True)
-        new_labeltrain=labels_train.reset_index(drop=True)
-        train_predvalues = pd.concat([new_labeltrain, pd.DataFrame(y_pred_train)], axis=1)
-                
-        test_givenvalues = pd.concat([labels_test, y_test], axis=1)
-        test_givenvalues = test_givenvalues.reset_index(drop=True)
-        new_labeltest=labels_test.reset_index(drop=True)
-        test_predvalues = pd.concat([new_labeltest, pd.DataFrame(y_pred_test)], axis=1)
-        
-        res_file.write(finalresults.to_string(index=False,header=False)+' '+ str(mae_test[0])+' '+ str(mae_test[1])+' '+ str(r2score)+' '+ str(variancescore) + "\n")
+        for k in range(100): 
+                  
+            x_train, x_test, y_train, y_test = train_test_split(df_x, df_y, test_size=0.30)
+            
+            labels_train = x_train[names]
+            labels_test = x_test[names]    
+            
+            x_train.drop(names,axis=1,inplace=True)
+            x_test.drop(names,axis=1,inplace=True)
+            
+            reg.fit(x_train, y_train)
+            
+            joblib.dump(reg, 'savedmodel.pkl')
+            
+            y_pred_test = reg.predict(x_test)
+            y_pred_train = reg.predict(x_train)
+            
+            
+            N = len(y_test)
+            starttime = time()
+            y_pred_test = reg.predict(x_test)
+            elapsedtime = time()
+            t = elapsedtime - starttime
+            
+            
+            #score_test = reg.score(x_test, y_test)
+            
+            variancescore = explained_variance_score(y_test, y_pred_test) 
+            
+            r2score = r2_score(y_test, y_pred_test)
+            
+            
+            reg = joblib.load('savedmodel.pkl') #loading the saved model
+            
+            
+            pred_newdf = reg.predict(newdf) #applying the saved model to the new stars
+            
+            finalresults = pd.concat([newlabels, pd.DataFrame(pred_newdf)], axis=1)
+            
+            #print(finalresults)
+            
+            #print('Calculated parameters for {} stars in {:.2f}ms'.format(N, t*1e3))
+            #print ('test score:', score_test)
+            #print ('variance score:', variancescore)
+            #print ('r2score:', r2score)
+            
+            mae_train = mean_abso_error(y_train[:],y_pred_train[:]) 
+            mape_train = mean_absolute_percentage_error(y_train[:],y_pred_train[:]) 
+            
+            #print('Mean Absolute Error of Train : ' + str(mae_train))
+            #print('Mean Absolute Percentage Error of Train : '+ str(mape_train))
+            
+            mae_test = mean_abso_error(y_test[:],y_pred_test[:])
+            mape_test = mean_absolute_percentage_error(y_test[:],y_pred_test[:])
+            
+            #print('Mean Absolute Error of Test : ' + str(mae_test))
+            #print('Mean Absolute Percentage Error of Test : '+ str(mape_test))
+                    
+            
+            train_givenvalues = pd.concat([labels_train, y_train], axis=1)
+            train_givenvalues = train_givenvalues.reset_index(drop=True)
+            new_labeltrain=labels_train.reset_index(drop=True)
+            train_predvalues = pd.concat([new_labeltrain, pd.DataFrame(y_pred_train)], axis=1)
+                    
+            test_givenvalues = pd.concat([labels_test, y_test], axis=1)
+            test_givenvalues = test_givenvalues.reset_index(drop=True)
+            new_labeltest=labels_test.reset_index(drop=True)
+            test_predvalues = pd.concat([new_labeltest, pd.DataFrame(y_pred_test)], axis=1)
+            
+            
+            FeH_list.append(finalresults[0])
+            Teff_list.append(finalresults[1])
+            MAE_FeH_list.append(mae_test[0])
+            MAE_Teff_list.append(mae_test[1])
+            R2_list.append(r2score)
+            Var_list.append(variancescore)
+            
+        print('Star '+str(newlabels.iat[0,0])+' results completed and saved in Paremeter_Results.dat')
+        res_file.write(str(newlabels.iat[0,0])+' '+ str(np.mean(FeH_list))+' '+ str(np.std(FeH_list))+' '+ str(np.mean(MAE_FeH_list))+' '+ str(np.mean(Teff_list))+' '+ str(np.std(Teff_list))+' '+ str(np.mean(MAE_Teff_list))+' '+str(np.mean(R2_list))+' '+ str(np.mean(Var_list)) + "\n")
         
         
         starname = filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')
