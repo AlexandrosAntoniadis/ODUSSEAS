@@ -3,13 +3,11 @@
 """
 Created on Wed Oct 31 12:54:57 2018
 
-@author: mac
+@author: aantoniadis
 """
 
 import numpy as np
 from astropy.io import fits
-import matplotlib.pylab as plt
-from scipy.interpolate import interp1d
 from PyAstronomy import pyasl
 from build_pew_verygeneral import pseudo_EW
 
@@ -26,7 +24,18 @@ resolution = 75000 # set the resolution that you want to convolve the HARPS star
 
 resonumber = str(resolution)
 
-def convolve_data(fname, resolution, resonumber):
+c = 299792
+DU_harps = c / 115000
+
+R_new = resolution
+
+DU_new = c / R_new
+
+DU_conv = ((DU_new)**2 - (DU_harps)**2)**(0.5)
+
+R_conv = c / (DU_conv)
+
+def convolve_data(fname, R_conv, resonumber):
 
 
     flux = fits.getdata(fname)
@@ -34,8 +43,7 @@ def convolve_data(fname, resolution, resonumber):
     w0, dw, N = hdr['CRVAL1'], hdr['CDELT1'], hdr['NAXIS1']
     wavelength = w0 + dw * np.arange(N)
     
-    
-    newflux = pyasl.instrBroadGaussFast(wavelength, flux, resolution, edgeHandling="firstlast", fullout=False, maxsig=None)
+    newflux = pyasl.instrBroadGaussFast(wavelength, flux, R_conv, edgeHandling="firstlast", fullout=False, maxsig=None)
     
     fits.writeto(fname.replace('.fits', '')+'conv'+resonumber+'.fits', newflux, hdr, overwrite=True)
 
@@ -60,16 +68,16 @@ def Load_Data_Pairs(data1):
 
 
 
-filepaths = np.loadtxt('goodHARPSfilelist.dat', dtype=str)
+filepaths = np.loadtxt('RefHARPSfilelist.dat', dtype=str)
 
 if convolve_now == "yes" :
     for item in filepaths:
-        convolve_data(item, resolution, resonumber)
+        convolve_data(item, R_conv, resonumber)
 
      # below I create the convolved HARPSfilelist 
 
-    name_of_input = 'goodHARPSfilelist.dat'
-    name_of_output = 'conv'+resonumber+name_of_input
+    name_of_input = 'RefHARPSfilelist.dat'
+    name_of_output = 'res'+resonumber+name_of_input
     
     input_list = open(name_of_input,'r')
     output_list = open(name_of_output,'w')
@@ -79,7 +87,7 @@ if convolve_now == "yes" :
     input_list.close()
 
 else:
-    name_of_output = 'goodHARPSfilelist.dat'
+    name_of_output = 'RefHARPSfilelist.dat'
 
   
 filepaths = np.loadtxt(name_of_output, dtype=str)
@@ -88,7 +96,7 @@ wavelength_range = np.loadtxt('lines.rdb', skiprows=2)
 dw = 0.4
 plot = False
 
-directory_name = 'res'+resonumber+'goodHARPS_EWmyresults'
+directory_name = 'res'+resonumber+'RefHARPS_EWmyresults'
 
 if not os.path.exists(directory_name):
     os.makedirs(directory_name)
@@ -110,7 +118,7 @@ for i in np.arange(size_of_filepaths):
     
 
    
-myData = "res"+resonumber+"goodHARPS_EWmyresults"
+myData = "res"+resonumber+"RefHARPS_EWmyresults"
     
 our_data, our_datanames = Load_Data_Pairs(myData)
     
@@ -139,26 +147,26 @@ for i in range(len(our_datanames)):
     table[:, 1+i] = our_data[i]
     
         
-np.savetxt("res"+resonumber+"goodHARPS_myEW.dat", table, header = headers, delimiter=",")   
+np.savetxt("res"+resonumber+"RefHARPS_myEW.dat", table, header = headers, delimiter=",")   
     
 
 # transpose
      
-table = np.loadtxt('res'+resonumber+'goodHARPS_myEW.dat', dtype=str, delimiter=',', comments="?")    
+table = np.loadtxt('res'+resonumber+'RefHARPS_myEW.dat', dtype=str, delimiter=',', comments="?")    
 table_T = np.transpose(table)
 table_T[0,0] = table_T[0,0].replace('# ','')
 print(table_T[0])
-np.savetxt('res'+resonumber+'goodHARPS_transposed.csv', table_T, delimiter=',', fmt='%s')
+np.savetxt('res'+resonumber+'RefHARPS_transposed.csv', table_T, delimiter=',', fmt='%s')
 print (table_T[:,0]) 
     
 # add the parameters as references for the ML to train and test
     
-df = pd.read_csv("originalparameters.dat", sep=" ", header = 0)
+df = pd.read_csv("Refparameters.dat", sep=" ", header = 0)
 
 df.loc[:,"starname"] = df.Star.str.split("_").str[0].str.strip() 
 
 
-df2 = pd.read_csv("res"+resonumber+"goodHARPS_transposed.csv", sep=",")
+df2 = pd.read_csv("res"+resonumber+"RefHARPS_transposed.csv", sep=",")
 
 df2.loc[:,"starname"] = df2.names.str.split("_").str[1].str.strip()  # since these files start with "result_"
 
@@ -167,4 +175,4 @@ df3 = pd.merge(df2, df, on="starname", how="outer")
 
 df3 = df3.drop(["starname", "Star"], axis=1)
 
-df3.to_csv("res"+resonumber+"_goodEWPar.csv", sep=",", index=False) 
+df3.to_csv("res"+resonumber+"_RefEWPar.csv", sep=",", index=False) 
