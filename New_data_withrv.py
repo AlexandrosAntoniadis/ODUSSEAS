@@ -18,13 +18,13 @@ from scipy.interpolate import interp1d
 
 def gaussian(x, mu, sig):
   return np.exp(-np.power(x - mu, 2.) / (2 * np.power(sig, 2.)))
-#
+
 def find_rv(wavelength, flux, mask_lines=[5371.50, 5394.64, 5397.10, 5405.80, 5409.80, 5429.70, 5432.55, 5434.52, 5446.90, 5535.50, 6090.20, 6102.72, 6119.52, 6122.22], delta_rv=200):
   wave_mask = np.arange(mask_lines[0]-5., mask_lines[-1]+5., 0.01)
   flux_mask = 1. + wave_mask * 0.0
   for line in mask_lines:
     flux_mask -= gaussian(wave_mask, line, 0.1)
-#
+
   ind_wi = np.where(wavelength < wave_mask[0])[0][-1]
   ind_wf = np.where(wavelength > wave_mask[-1])[0][0]
 
@@ -35,15 +35,16 @@ def find_rv(wavelength, flux, mask_lines=[5371.50, 5394.64, 5397.10, 5405.80, 54
   rv, cc = pyasl.crosscorrRV(wave_t, flux_t, wave_mask, flux_mask, -delta_rv, delta_rv, 0.1, skipedge=500)
   maxind = np.argmax(cc)
 
-  plt.figure(1)
-  plt.plot(wave_t,flux_t/np.median(flux_t))
-  plt.plot(wave_mask,flux_mask)
-  plt.figure(2)
-  plt.plot(rv, cc)
-#  plt.show()
-  plt.plot(rv, cc, 'bp-')
-  plt.plot(rv[maxind], cc[maxind], 'ro')
-#  plt.show()
+ # plt.figure(1)
+ # plt.plot(wave_t,flux_t/np.median(flux_t))
+ # plt.plot(wave_mask,flux_mask)
+ # plt.figure(2)
+ # plt.plot(rv, cc)
+ # plt.show()
+ # plt.plot(rv, cc, 'bp-')
+ # plt.plot(rv[maxind], cc[maxind], 'ro')
+ # plt.show()
+  
   return rv[maxind]
 
 def rv_correction(fname, cdelt1=0.010):
@@ -52,15 +53,13 @@ def rv_correction(fname, cdelt1=0.010):
     hdr = fits.getheader(fname)
     w0, dw, N = hdr['CRVAL1'], hdr['CDELT1'], hdr['NAXIS1']
     wave = w0 + dw * np.arange(N)
-#    harps_mask = np.loadtxt()
+
     rv=find_rv(wave, flux)
     
     print ("RV:", rv)
     
     if abs(rv)>=1:
         
-    
-
         wave_rv = wave / (1 + rv/3.e5)
         f2 = interp1d(wave_rv, flux, kind='linear')
         wave_int = np.arange(wave_rv[0], wave_rv[-1]-cdelt1, cdelt1)
@@ -93,32 +92,8 @@ def Load_Data_Pairs(data1):
     return our_data, our_datanames
 
 
-def convolve_data(fname, resolution):
-
-
-    flux = fits.getdata(fname)
-    hdr = fits.getheader(fname)
-    w0, dw, N = hdr['CRVAL1'], hdr['CDELT1'], hdr['NAXIS1']
-    wavelength = w0 + dw * np.arange(N)
-    
- 
-    
-    if round(dw,4) != 0.010:
-        cdelt1 = 0.010
-        f2 = interp1d(wavelength, flux, kind='linear')
-        wavelength = np.arange(wavelength[0], wavelength[-1], cdelt1)
-        flux = f2(wavelength)
-        hdr['CDELT1']=0.010
-    
-    
-    
-    newflux = pyasl.instrBroadGaussFast(wavelength, flux, resolution, edgeHandling="firstlast", fullout=False, maxsig=None)
-    
-    fits.writeto(fname.replace('.fits', '')+'final'+'.fits', newflux, hdr, overwrite=True)
-
-
-def EWmeasurements(rv_cor=True):
-        convo_limit= 100000
+def EWmeasurements(do_rv_cor):
+  
         spectralist = np.loadtxt('1Dfilelist.dat', dtype=str)
 
         if spectralist.ndim > 1:
@@ -130,21 +105,14 @@ def EWmeasurements(rv_cor=True):
             resolution = [spectralist[1]]
 
     
-    
         for i in np.arange(len(filepaths)):
-
-
-            if np.float(resolution[i]) > convo_limit and np.float(resolution[i]) < 115000:
-                convolve_data(filepaths[i], np.float(resolution[i]))
-                
-            else:
-               
-                os.system("cp "+filepaths[i]+" "+filepaths[i].replace('.fits', 'final')+''+'.fits')
+  
+            os.system("cp "+filepaths[i]+" "+filepaths[i].replace('.fits', 'final')+''+'.fits')
                 
     
-            if rv_cor == True:
+            if do_rv_cor == 'yes':
 
-                rv_correction(filepaths[i].replace('.fits', 'final')+''+'.fits')
+               rv_correction(filepaths[i].replace('.fits', 'final')+''+'.fits')
                 
 
         name_of_input = '1Dfilelist.dat'
@@ -160,11 +128,9 @@ def EWmeasurements(rv_cor=True):
             else:    
                    output_list.write(line.replace('.fits','final'+'.fits'))
         output_list.close()
-        
-        
+            
         input_list.close()
-        
-                
+               
         name_of_input = '1Dfilelist.dat'
         name_of_output = 'final'+name_of_input
        
@@ -178,7 +144,6 @@ def EWmeasurements(rv_cor=True):
         input_list.close()
               
          
-        #filepaths = np.loadtxt(name_of_output, dtype=str)
         filepaths = np.loadtxt(name_of_output, dtype=str, unpack=True, usecols=(0,))               
         print(filepaths)
         dw = 0.4
@@ -240,11 +205,8 @@ def EWmeasurements(rv_cor=True):
                   lines = np.loadtxt('./'+directory_name+filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')+'centrallines.dat')
             
 
-
-            
             myData = "EWmyresults" 
            
-            # Load data and return the pairs
             our_data, our_datanames = Load_Data_Pairs(myData)
            
             table = np.empty((len(lines), 2))
@@ -261,7 +223,6 @@ def EWmeasurements(rv_cor=True):
                   table = np.loadtxt('./'+directory_name+filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')+'_EW.dat', dtype=str, delimiter=',', comments="?") 
       
        
-           
             table_T = np.transpose(table)
             
             table_T[0,0] = table_T[0,0].replace('# ','')
@@ -272,4 +233,3 @@ def EWmeasurements(rv_cor=True):
             else:
                   np.savetxt('./'+directory_name+filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')+'_newstars.csv', table_T, delimiter=',', fmt='%s')
        
-
