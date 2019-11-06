@@ -67,7 +67,6 @@ def area_between(f, g, dx):
     return A
 
 
-
 def pseudo_EW(fname, w1, w2, dw=0.4, plot=False):
     wavelength, flux = read_data(fname)
     wavelength, flux = cut_data(wavelength, flux, w1, w2)
