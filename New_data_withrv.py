@@ -6,7 +6,7 @@ Created on Tue Apr 30 19:12:26 2019
 @author: aantoniadis
 """
 
-from build_pew_verygeneral import pseudo_EW, read_data
+from build_pew import pseudo_EW, read_data
 import numpy as np
 import matplotlib.pyplot as plt
 import os
