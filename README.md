@@ -4,7 +4,8 @@
 "ODUSSEAS.py" is the code we run.
 
 We can set the regression type using the setting "regression".
-This can be: "ridge" (recommended), "ridgecv", "linear", "multitasklasso", "multitaskelasticnet"
+This can be: 'ridge' (recommended), 'ridgecv', 'linear', 'multitasklasso', 'multitaskelasticnet'
+We can also choose to do r.v. correction to our spectra if they are shifted, by setting to 'yes' the "do_rv_cor" option.
 
 Input: inside a folder with the path "spectra/newstars/", there should be the fits files of the 1D spectra of the unknown stars. Their filepaths should be written in a text file called "1Dfilelist.dat", and next to them the resolution of each spectrum. See example below:
 
