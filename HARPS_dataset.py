@@ -10,7 +10,6 @@ import numpy as np
 from astropy.io import fits
 from PyAstronomy import pyasl
 from build_pew import pseudo_EW
-
 import os
 import pandas as pd
 
@@ -24,7 +23,9 @@ resolution = 75000 # set the resolution that you want to convolve the HARPS star
 
 resonumber = str(resolution)
 
+
 c = 299792
+
 DU_harps = c / 115000
 
 R_new = resolution
@@ -35,8 +36,8 @@ DU_conv = ((DU_new)**2 - (DU_harps)**2)**(0.5)
 
 R_conv = c / (DU_conv)
 
-def convolve_data(fname, R_conv, resonumber):
 
+def convolve_data(fname, R_conv, resonumber):
 
     flux = fits.getdata(fname)
     hdr = fits.getheader(fname)
