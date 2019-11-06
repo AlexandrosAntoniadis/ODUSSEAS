@@ -6,7 +6,7 @@ Created on Fri Dec  7 15:15:35 2018
 @author: aantoniadis
 """
 
-import New_data_withrv
+import New_data
 import MachineLearning
 
 
@@ -16,10 +16,6 @@ regression = 'ridge' # choose the ML model: linear, ridge, ridgecv, multitasklas
 do_rv_cor = 'yes' # choose 'yes' if you want to do rv correction to the spectra or 'no' if they are already corrected
 ########################
 
-New_data_withrv.EWmeasurements(do_rv_cor)     
+New_data.EWmeasurements(do_rv_cor)     
     
 MachineLearning.ML(regression)
-
-    
-
-    
