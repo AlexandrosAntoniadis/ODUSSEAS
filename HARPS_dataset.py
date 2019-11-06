@@ -9,7 +9,7 @@ Created on Wed Oct 31 12:54:57 2018
 import numpy as np
 from astropy.io import fits
 from PyAstronomy import pyasl
-from build_pew_verygeneral import pseudo_EW
+from build_pew import pseudo_EW
 
 import os
 import pandas as pd
