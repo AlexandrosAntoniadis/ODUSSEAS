@@ -51,7 +51,7 @@ def ML(regression):
         resolution = [spectralist[1]]
     directory_name = 'EWmyresults'
     res_file=open('Parameter_Results.dat', 'w')
-    res_file.write("# newstars [Fe/H] STD_FeH MAE_[Fe/H] Teff STD_Teff MAE_Teff EV_score R2_score \n")
+    res_file.write("# newstars [Fe/H] STD_FeH MAE_[Fe/H] Teff STD_Teff MAE_Teff R2_score EV_score \n")
                    
     
     MLplots_folder = 'Model_Prediction_Plots'
@@ -75,24 +75,21 @@ def ML(regression):
             
         newdf.dropna(axis=1, inplace=True)
         
-###### masking possible gaps #################
+
         zeroews = newdf.mask(newdf<0.00001)
         newnames = ['newstars']
         newlabels = newdf[newnames]
         newdf = zeroews.dropna('columns')
         newlines = newdf.columns.values[1::]        
-###############################################
+
         
         df_x = df.drop(y,axis=1)
         
         df_y = df[y] 
                 
-#        newnames = ['newstars']
-#        newlabels = newdf[newnames] 
                            
         df_x = pd.concat([df.loc[:, 'names'], df.loc[:, newlines]], axis=1)
                 
-#       newdf = newdf.drop(newlabels,axis=1) 
         
         newdf = newdf.loc[:, newlines]
         
@@ -138,7 +135,7 @@ def ML(regression):
             reg = joblib.load('savedmodel.pkl') #loading the saved model
             
             
-            pred_newdf = reg.predict(newdf) #applying the saved model to the new stars
+            pred_newdf = reg.predict(newdf) #applying the saved model
             
             finalresults = pd.concat([newlabels, pd.DataFrame(pred_newdf)], axis=1)
             
