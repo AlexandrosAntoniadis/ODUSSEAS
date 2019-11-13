@@ -178,8 +178,8 @@ def ML(regression):
             Var_list.append(variancescore)
             
         print('Star '+str(newlabels.iat[0,0])+' results completed and saved in Paremeter_Results.dat')
-        res_file.write(str(newlabels.iat[0,0])+' '+ str(np.mean(FeH_list))+' '+ str(np.std(FeH_list))+' '+ str(np.mean(MAE_FeH_list))+' '+ str(np.mean(Teff_list))+' '+ str(np.std(Teff_list))+' '+ str(np.mean(MAE_Teff_list))+' '+str(np.mean(R2_list))+' '+ str(np.mean(Var_list)) + "\n")
         
+        res_file.write(str(newlabels.iat[0,0])+' '+ str(round(np.mean(FeH_list),3))+' '+ str(round(np.std(FeH_list),3))+' '+ str(round(np.mean(MAE_FeH_list),3))+' '+ str(int(np.mean(Teff_list)))+' '+ str(int(np.std(Teff_list)))+' '+ str(int(np.mean(MAE_Teff_list)))+' '+str(round(np.mean(R2_list),3))+' '+ str(round(np.mean(Var_list),3)) + "\n")
         
         starname = filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')
         
