@@ -189,43 +189,68 @@ def ML(regression):
         set_res = 15
         fig, ax = plt.subplots(figsize=(set_res*0.8,set_res*0.5))
         ax.set_title('[Fe/H]'+' '+'model'+' '+'testing', fontsize=set_res*1.5)
-        ax.set_ylabel("ML [Fe/H] [dex]", fontsize=set_res*1.5)
-        ax.set_xlabel("AA [Fe/H] [dex]", fontsize=set_res*1.5)        
+        ax.set_xlabel("M.L. [Fe/H] [dex]", fontsize=set_res*1.5)
+        ax.set_ylabel("Ref. [Fe/H] [dex]", fontsize=set_res*1.5)        
         ax.plot((-0.8,0.4),(-0.8,0.4),'--b', lw=2) # for FeH
-        ax.plot(test_givenvalues.values[:,1], test_predvalues.values[:,1],'ko')      
+        ax.plot(test_predvalues.values[:,1],test_givenvalues.values[:,1],'ko')      
         ax.tick_params(axis='both',labelsize=set_res*1.5)
         ax.spines['right'].set_visible(True)
         ax.spines['top'].set_visible(True)
         plt.savefig("./"+MLplots_folder+"/"+starname+'_FeH_test_comparison.pdf', bbox_inches='tight')
         plt.close()
         
+        # Feh diff
+        set_res = 15
+        fig, ax = plt.subplots(figsize=(set_res*0.8,set_res*0.2))
+        ax.set_xlabel("M.L. [Fe/H] [dex]", fontsize=set_res*1.5)
+        ax.set_ylabel("$\Delta$[Fe/H] [dex]", fontsize=set_res*1.5)        
+        ax.plot((-0.8,0.4),(0,0),'--b', lw=2) # for FeH 
+        ax.plot(test_predvalues.values[:,1],test_predvalues.values[:,1]-test_givenvalues.values[:,1] ,'ko')      
+        ax.tick_params(axis='both',labelsize=set_res*1.5)
+        ax.spines['right'].set_visible(True)
+        ax.spines['top'].set_visible(True)
+        plt.savefig("./"+MLplots_folder+"/"+starname+'_Diff_FeH_test_comparison.pdf', bbox_inches='tight')
+        plt.close()
         
         # plots of the Teff test
-        
         set_res = 15
         fig, ax = plt.subplots(figsize=(set_res*0.8,set_res*0.5))
         ax.set_title('T$_{\mathrm{eff}}$'+' '+'model'+' '+'testing', fontsize=set_res*1.5)
-        ax.set_ylabel("ML T$_{\mathrm{eff}}$ [K]", fontsize=set_res*1.5)
-        ax.set_xlabel("AA T$_{\mathrm{eff}}$ [K]", fontsize=set_res*1.5)
+        ax.set_xlabel("M.L. T$_{\mathrm{eff}}$ [K]", fontsize=set_res*1.5)
+        ax.set_ylabel("Ref. T$_{\mathrm{eff}}$ [K]", fontsize=set_res*1.5)
         ax.tick_params(axis='both',labelsize=set_res*1.5)
         ax.spines['right'].set_visible(True)
         ax.spines['top'].set_visible(True)
         ax.plot((2700,4000),(2700,4000),'--b', lw=2) #for Teff
-        ax.plot(test_givenvalues.values[:,2], test_predvalues.values[:,2],'ko')       
+        ax.plot(test_predvalues.values[:,2], test_givenvalues.values[:,2],'ko')       
         ax.plot(clip_box=True, clip_on=True)
         plt.savefig("./"+MLplots_folder+"/"+starname+'_Teff_test_comparison.pdf', bbox_inches='tight')
         plt.close()
         
+        # T diff
+        set_res = 15
+        fig, ax = plt.subplots(figsize=(set_res*0.8,set_res*0.2))
+        ax.set_xlabel("M.L. T$_{\mathrm{eff}}$ [K]", fontsize=set_res*1.5)
+        ax.set_ylabel("$\Delta$T$_{\mathrm{eff}}$ [K]", fontsize=set_res*1.5)
+        ax.tick_params(axis='both',labelsize=set_res*1.5)
+        ax.spines['right'].set_visible(True)
+        ax.spines['top'].set_visible(True)
+        ax.plot((2700,4000),(0,0),'--b', lw=2) #for Teff
+        ax.plot(test_predvalues.values[:,2],test_predvalues.values[:,2]-test_givenvalues.values[:,2],'ko')       
+        ax.plot(clip_box=True, clip_on=True)
+        plt.savefig("./"+MLplots_folder+"/"+starname+'_Diff_Teff_test_comparison.pdf', bbox_inches='tight')
+        plt.close()
+           
         
         # plots of the FeH train
            
         #set_res = 15
         #fig, ax = plt.subplots(figsize=(set_res*0.8,set_res*0.5))
         #ax.set_title('[Fe/H]'+' '+'model'+' '+'training', fontsize=set_res*1.5)
-        #ax.set_ylabel("ML [Fe/H] [dex]", fontsize=set_res*1.5)
-        #ax.set_xlabel("AA [Fe/H] [dex]", fontsize=set_res*1.5)        
+        #ax.set_xlabel("M.L. [Fe/H] [dex]", fontsize=set_res*1.5)
+        #ax.set_ylabel("Ref. [Fe/H] [dex]", fontsize=set_res*1.5)        
         #ax.plot((-0.8,0.4),(-0.8,0.4),'--b', lw=2) # for FeH
-        #ax.plot(train_givenvalues.values[:,1], train_predvalues.values[:,1],'ko')      
+        #ax.plot(train_predvalues.values[:,1],train_givenvalues.values[:,1],'ko')      
         #ax.tick_params(axis='both',labelsize=set_res*1.5)
         #ax.spines['right'].set_visible(True)
         #ax.spines['top'].set_visible(True)
@@ -238,13 +263,13 @@ def ML(regression):
         #set_res = 15
         #fig, ax = plt.subplots(figsize=(set_res*0.8,set_res*0.5))
         #ax.set_title('T$_{\mathrm{eff}}$'+' '+'model'+' '+'training', fontsize=set_res*1.5)
-        #ax.set_ylabel("ML T$_{\mathrm{eff}}$ [K]", fontsize=set_res*1.5)
-        #ax.set_xlabel("AA T$_{\mathrm{eff}}$ [K]", fontsize=set_res*1.5)
+        #ax.set_xlabel("M.L. T$_{\mathrm{eff}}$ [K]", fontsize=set_res*1.5)
+        #ax.set_ylabel("Ref. T$_{\mathrm{eff}}$ [K]", fontsize=set_res*1.5)
         #ax.tick_params(axis='both',labelsize=set_res*1.5)
         #ax.spines['right'].set_visible(True)
         #ax.spines['top'].set_visible(True)
         #ax.plot((2700,4000),(2700,4000),'--b', lw=2) #for Teff
-        #ax.plot(train_givenvalues.values[:,2], train_predvalues.values[:,2],'ko')       
+        #ax.plot(train_predvalues.values[:,2],train_givenvalues.values[:,2],'ko')       
         #ax.plot(clip_box=True, clip_on=True)
         #plt.savefig("./"+MLplots_folder+"/"+starname+'_Teff_train_comparison.pdf', bbox_inches='tight')
         #plt.close()
