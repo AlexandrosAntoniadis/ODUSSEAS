@@ -58,23 +58,22 @@ def rv_correction(fname, cdelt1=0.010):
     
     print ("RV:", rv)
     
-    if abs(rv)>=0:
+    if abs(rv) > 0:
         
         wave_rv = wave / (1 + rv/3.e5)
-        f2 = interp1d(wave_rv, flux, kind='linear')
-        wave_int = np.arange(wave_rv[0], wave_rv[-1]-cdelt1, cdelt1)
-        hdr['CRVAL1'] = wave_rv[0]
-        hdr['CDELT1'] = 0.010
-
-        flux_int = f2(wave_int)
-        flux = flux_int
         
     else:
+      
         wave_rv = wave
 
-        hdr['CRVAL1'] = wave_rv[0]
-        hdr['CDELT1'] = 0.010
         
+    f2 = interp1d(wave_rv, flux, kind='linear')
+    wave_int = np.arange(wave_rv[0], wave_rv[-1]-cdelt1, cdelt1)
+    flux_int = f2(wave_int)
+    flux = flux_int 
+    hdr['CRVAL1'] = wave_rv[0]
+    hdr['CDELT1'] = cdelt1
+    
     fits.writeto(fname, flux, hdr, overwrite=True)
     
 
