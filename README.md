@@ -22,3 +22,6 @@ Demo set: 1D spectra of stars from 5 different spectrographs with different reso
 We already provide precomputed pseudo EWs for a range of spectral resolutions used in popular spectrographs. For completeness, the repository also includes the code "HARPS_dataset.py", which can create a library of M dwarfs from our HARPS sample for any resolution we want to work at (the associated fits files are not uploaded). If you wish to create additional libraries, please contact us.
 
 Note: The structure of the repository and associated files should be kept as found, in order for the code to run properly.
+
+IF YOU USE THIS TOOL IN YOUR RESEARCH, PLEASE CITE THE CORRESPONDING PAPER:
+https://ui.adsabs.harvard.edu/abs/2020arXiv200209367A/abstract
