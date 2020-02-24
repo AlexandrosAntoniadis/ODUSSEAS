@@ -1,6 +1,9 @@
 # ODUSSEAS (Observing Dwarfs Using Stellar Spectroscopic Energy-Absorption Shapes):
 # A Machine-Learning Tool for the derivation of Teff and [Fe/H] of M Dwarf stars
 
+IF YOU USE THIS TOOL IN YOUR RESEARCH, PLEASE CITE THE CORRESPONDING PAPER:
+https://ui.adsabs.harvard.edu/abs/2020arXiv200209367A/abstract
+
 "ODUSSEAS.py" is the code we run.
 
 We can set the regression type using the setting "regression".
@@ -23,5 +26,3 @@ We already provide precomputed pseudo EWs for a range of spectral resolutions us
 
 Note: The structure of the repository and associated files should be kept as found, in order for the code to run properly.
 
-IF YOU USE THIS TOOL IN YOUR RESEARCH, PLEASE CITE THE CORRESPONDING PAPER:
-https://ui.adsabs.harvard.edu/abs/2020arXiv200209367A/abstract
