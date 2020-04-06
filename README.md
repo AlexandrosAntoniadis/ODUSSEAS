@@ -3,7 +3,7 @@
 
 IF YOU USE THIS TOOL IN YOUR RESEARCH, PLEASE CITE THE CORRESPONDING PAPER:
 
-https://www.aanda.org/articles/aa/abs/2020/04/aa37194-19/aa37194-19.html
+https://doi.org/10.1051/0004-6361/201937194
 
 "ODUSSEAS.py" is the code we run.
 
