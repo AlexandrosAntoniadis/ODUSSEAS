@@ -15,7 +15,8 @@ import matplotlib.pyplot as plt
 from sklearn import linear_model
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import explained_variance_score, r2_score
-from sklearn.externals import joblib
+#from sklearn.externals import joblib
+import joblib
 
 def mean_absolute_percentage_error(y_true, y_pred): 
     return np.mean(np.abs((y_true - y_pred) / y_true)) * 100
