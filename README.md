@@ -27,3 +27,8 @@ We already provide precomputed pseudo EWs for a range of spectral resolutions us
 
 Note: The structure of the repository and associated files should be kept as found, in order for the code to run properly.
 
+CURRENT REQUIREMENTS : 
+Python 3
+pandas version 0.20
+
+
