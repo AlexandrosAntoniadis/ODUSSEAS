@@ -7,7 +7,7 @@ https://doi.org/10.1051/0004-6361/201937194
 
 
 CURRENT INSTALLATION REQUIREMENTS : 
-Python 3, pandas version 0.20
+Python 3, pandas version 0.20 (In a command terminal do: pip install pandas==0.20.3)
 
 
 "ODUSSEAS.py" is the code we run.
