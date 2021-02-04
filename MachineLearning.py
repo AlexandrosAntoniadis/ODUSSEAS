@@ -52,7 +52,7 @@ def ML(regression):
         resolution = [spectralist[1]]
     directory_name = 'EWmyresults'
     res_file=open('Parameter_Results.dat', 'w')
-    res_file.write("# newstars [Fe/H] STD_FeH MAE_[Fe/H] Teff STD_Teff MAE_Teff R2_score EV_score \n")
+    res_file.write("# newstars [Fe/H] STD_FeH MAE_[Fe/H] Wide_Error_[Fe/H] Teff STD_Teff MAE_Teff Wide_Error_Teff R2_score EV_score \n")
                    
     
     MLplots_folder = 'Model_Prediction_Plots'
@@ -180,7 +180,24 @@ def ML(regression):
             
         print('Star '+str(newlabels.iat[0,0])+' results completed and saved in Paremeter_Results.dat')
         
-        res_file.write(str(newlabels.iat[0,0])+' '+ str(round(np.mean(FeH_list),3))+' '+ str(round(np.std(FeH_list),3))+' '+ str(round(np.mean(MAE_FeH_list),3))+' '+ str(int(np.mean(Teff_list)))+' '+ str(int(np.std(Teff_list)))+' '+ str(int(np.mean(MAE_Teff_list)))+' '+str(round(np.mean(R2_list),3))+' '+ str(round(np.mean(Var_list),3)) + "\n")
+        if resolution[i]=='115000':
+            wide_error_FeH = ((np.std(FeH_list))**2 + (0.10)**2)**(1/2)
+            wide_error_Teff = ((np.std(FeH_list))**2 + (65)**2)**(1/2)
+        elif resolution[i]=='110000':
+            wide_error_FeH = ((np.std(FeH_list))**2 + (0.10)**2)**(1/2)
+            wide_error_Teff = ((np.std(FeH_list))**2 + (68)**2)**(1/2)
+        elif resolution[i]=='94600':
+            wide_error_FeH = ((np.std(FeH_list))**2 + (0.12)**2)**(1/2)
+            wide_error_Teff = ((np.std(FeH_list))**2 + (77)**2)**(1/2)
+        elif resolution[i]=='75000':
+            wide_error_FeH = ((np.std(FeH_list))**2 + (0.13)**2)**(1/2)
+            wide_error_Teff = ((np.std(FeH_list))**2 + (78)**2)**(1/2)
+        elif resolution[i]=='48000':
+            wide_error_FeH = ((np.std(FeH_list))**2 + (0.13)**2)**(1/2)
+            wide_error_Teff = ((np.std(FeH_list))**2 + (80)**2)**(1/2)         
+        
+        
+        res_file.write(str(newlabels.iat[0,0])+' '+ str(round(np.mean(FeH_list),3))+' '+ str(round(np.std(FeH_list),3))+' '+ str(round(np.mean(MAE_FeH_list),3))+' '+ str(round((wide_error_FeH),3))+' '+ str(int(np.mean(Teff_list)))+' '+ str(int(np.std(Teff_list)))+' '+ str(int(np.mean(MAE_Teff_list)))+' '+ str(int(wide_error_Teff))+' '+ str(round(np.mean(R2_list),3))+' '+ str(round(np.mean(Var_list),3)) + "\n")
         
         starname = filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')
         
