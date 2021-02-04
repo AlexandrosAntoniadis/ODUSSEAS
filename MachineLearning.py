@@ -41,8 +41,7 @@ def ML(regression):
     elif regression == 'multitaskelasticnet':
         reg = linear_model.MultiTaskElasticNet(alpha=1) 
         
-        
-     
+             
     spectralist = np.loadtxt('final1Dfilelist.dat', dtype=str)
     if spectralist.ndim > 1:
         filepaths = spectralist[:,0]
