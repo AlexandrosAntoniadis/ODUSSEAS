@@ -24,7 +24,7 @@ spectra/newstars/starB.fits 94600
 
 spectra/newstars/starC.fits 75000
 
-Output: A text file named "Parameter_Results.dat" is created. It contains the averages of [Fe/H] and Teff after 100 M.L. runs for each star, along with their dispersion, the mean absolute errors of the models that predicted them, the wide error budget (considering the intrinsic uncertainties of the reference parameters during the machine learning process), and the machine-learning scores.
+Output: A text file named "Parameter_Results.dat" is created. It contains the average values of [Fe/H] and Teff after 100 M.L. runs for each star, along with their dispersion, the mean absolute errors of the models that predicted them, the wide error budget (after taking into consideration the intrinsic uncertainties of the reference parameters into the machine learning process), and the machine-learning scores.
 
 Demo set: 1D spectra of stars from 5 different spectrographs with different resolutions and respective HARPS datasets for them are provided to use our tool. For comparison, the reference values of the respective HARPS spectra are the following: Gl846 = -0.08 & 3682; Gl514 = -0.13 & 3574 ; Gl908 = -0.38 & 3587 ; Gl674 = -0.18 & 3284 and for the HARPS star outside the reference HARPS dataset Gl643 = -0.26 & 3102 by Neves et al (2014).
 
