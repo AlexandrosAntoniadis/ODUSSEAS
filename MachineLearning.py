@@ -177,7 +177,6 @@ def ML(regression):
             R2_list.append(r2score)
             Var_list.append(variancescore)
             
-        print('Star '+str(newlabels.iat[0,0])+' results completed and saved in Paremeter_Results.dat')
         
         if resolution[i]=='115000':
             wide_error_FeH = ((np.std(FeH_list))**2 + (0.10)**2)**(1/2)
@@ -199,6 +198,8 @@ def ML(regression):
         res_file.write(str(newlabels.iat[0,0])+' '+ str(round(np.mean(FeH_list),3))+' '+ str(round(np.std(FeH_list),3))+' '+ str(round(np.mean(MAE_FeH_list),3))+' '+ str(round((wide_error_FeH),3))+' '+ str(int(np.mean(Teff_list)))+' '+ str(int(np.std(Teff_list)))+' '+ str(int(np.mean(MAE_Teff_list)))+' '+ str(int(wide_error_Teff))+' '+ str(round(np.mean(R2_list),3))+' '+ str(round(np.mean(Var_list),3)) + "\n")
         
         starname = filepaths[i].replace('.fits','').replace('spectra/'+'newstars/','')
+  
+        print('Star '+str(newlabels.iat[0,0])+' results completed and saved in Paremeter_Results.dat')
         
                    
         # plots of the FeH test
