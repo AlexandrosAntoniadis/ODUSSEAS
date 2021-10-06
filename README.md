@@ -1,4 +1,4 @@
-n# ODUSSEAS (Observing Dwarfs Using Stellar Spectroscopic Energy-Absorption Shapes):
+# ODUSSEAS (Observing Dwarfs Using Stellar Spectroscopic Energy-Absorption Shapes):
 # A Machine-Learning Tool for the derivation of Teff and [Fe/H] of M Dwarf stars
 
 IF YOU USE THIS TOOL IN YOUR RESEARCH, PLEASE CITE THE CORRESPONDING PAPER:
