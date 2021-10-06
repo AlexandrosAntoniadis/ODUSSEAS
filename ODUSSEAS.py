@@ -18,4 +18,4 @@ do_rv_cor = 'yes' # choose 'yes' if you want to do rv correction to the spectra 
 
 New_data.EWmeasurements(do_rv_cor)     
     
-MachineLearning.ML(regression)
+MachineLearning.ML(regression, reference)
