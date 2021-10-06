@@ -28,7 +28,7 @@ def mean_sq_error(y_true, y_pred):
     return np.mean(np.abs((y_true - y_pred)**2))
                                      
 
-def ML(regression):
+def ML(regression, reference):
             
     if regression == 'linear':
         reg = linear_model.LinearRegression()
@@ -61,7 +61,7 @@ def ML(regression):
              
     for i in np.arange(len(filepaths)):
                 
-        df = pd.read_csv('res'+resolution[i]+'_RefEWPar.csv')
+        df = pd.read_csv('res'+resolution[i]+'_'+reference+'RefEWPar.csv')
         df.dropna(axis=1, inplace=True)
         
         names = ['names']
@@ -102,7 +102,7 @@ def ML(regression):
         
         for k in range(100): 
                   
-            x_train, x_test, y_train, y_test = train_test_split(df_x, df_y, test_size=0.30)
+            x_train, x_test, y_train, y_test = train_test_split(df_x, df_y, test_size=0.20)
             
             labels_train = x_train[names]
             labels_test = x_test[names]    
@@ -178,21 +178,37 @@ def ML(regression):
             Var_list.append(variancescore)
             
         
-        if resolution[i]=='115000':
+        if resolution[i]=='115000' and reference=='photometry' :
             wide_error_FeH = ((np.std(FeH_list))**2 + (0.10)**2)**(1/2)
             wide_error_Teff = ((np.std(Teff_list))**2 + (65)**2)**(1/2)
-        elif resolution[i]=='110000':
+        elif resolution[i]=='110000' and reference=='photometry' :
             wide_error_FeH = ((np.std(FeH_list))**2 + (0.10)**2)**(1/2)
             wide_error_Teff = ((np.std(Teff_list))**2 + (68)**2)**(1/2)
-        elif resolution[i]=='94600':
+        elif resolution[i]=='94600' and reference=='photometry' :
             wide_error_FeH = ((np.std(FeH_list))**2 + (0.12)**2)**(1/2)
             wide_error_Teff = ((np.std(Teff_list))**2 + (77)**2)**(1/2)
-        elif resolution[i]=='75000':
+        elif resolution[i]=='75000' and reference=='photometry' :
             wide_error_FeH = ((np.std(FeH_list))**2 + (0.13)**2)**(1/2)
             wide_error_Teff = ((np.std(Teff_list))**2 + (78)**2)**(1/2)
-        elif resolution[i]=='48000':
+        elif resolution[i]=='48000' and reference=='photometry' :
             wide_error_FeH = ((np.std(FeH_list))**2 + (0.13)**2)**(1/2)
             wide_error_Teff = ((np.std(Teff_list))**2 + (80)**2)**(1/2)         
+        
+        if resolution[i]=='115000' and reference=='interferometry' :
+            wide_error_FeH = ((np.std(FeH_list))**2 + (0.07)**2)**(1/2)
+            wide_error_Teff = ((np.std(Teff_list))**2 + (100)**2)**(1/2)
+        elif resolution[i]=='110000' and reference=='interferometry' :
+            wide_error_FeH = ((np.std(FeH_list))**2 + (0.07)**2)**(1/2)
+            wide_error_Teff = ((np.std(Teff_list))**2 + (105)**2)**(1/2)
+        elif resolution[i]=='94600' and reference=='interferometry' :
+            wide_error_FeH = ((np.std(FeH_list))**2 + (0.07)**2)**(1/2)
+            wide_error_Teff = ((np.std(Teff_list))**2 + (110)**2)**(1/2)
+        elif resolution[i]=='75000' and reference=='interferometry' :
+            wide_error_FeH = ((np.std(FeH_list))**2 + (0.08)**2)**(1/2)
+            wide_error_Teff = ((np.std(Teff_list))**2 + (112)**2)**(1/2)
+        elif resolution[i]=='48000' and reference=='interferometry' :
+            wide_error_FeH = ((np.std(FeH_list))**2 + (0.08)**2)**(1/2)
+            wide_error_Teff = ((np.std(Teff_list))**2 + (116)**2)**(1/2)
         
         
         res_file.write(str(newlabels.iat[0,0])+' '+ str(round(np.mean(FeH_list),3))+' '+ str(round(np.std(FeH_list),3))+' '+ str(round(np.mean(MAE_FeH_list),3))+' '+ str(round((wide_error_FeH),3))+' '+ str(int(np.mean(Teff_list)))+' '+ str(int(np.std(Teff_list)))+' '+ str(int(np.mean(MAE_Teff_list)))+' '+ str(int(wide_error_Teff))+' '+ str(round(np.mean(R2_list),3))+' '+ str(round(np.mean(Var_list),3)) + "\n")
