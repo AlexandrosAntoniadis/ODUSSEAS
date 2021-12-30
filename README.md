@@ -13,7 +13,7 @@ Python 3, pandas version 0.20 (this specific version is needed, so in a command 
 "ODUSSEAS.py" is the code we run.
 
 We select the methods by which the reference parameters have been derived, using the setting "reference".
-This can be: 'photometry' which uses as reference dataset 65 stars with photometric scales of Teff by Casagrande et al (2008) and [Fe/H] by Neves et al (2012), or 'interferometry' which uses as reference dataset 48 stars with interferometric calibration of Teff by Khata et al (2021) and the calibration of [Fe/H] by Neves et al (2014).
+This can be: 'photometry' which uses as reference dataset 65 stars with photometric scales of Teff by Casagrande et al (2008) and [Fe/H] by Neves et al (2012), or 'interferometry' which uses as reference dataset 47 stars with interferometric calibration of Teff by Khata et al (2021) and the calibration of [Fe/H] by Neves et al (2014).
 We can set the regression type using the setting "regression".
 This can be: 'ridge' (recommended), 'ridgecv', 'linear', 'multitasklasso', 'multitaskelasticnet'
 We can also choose to do r.v. correction to our spectra if they are shifted, by setting to 'yes' the "do_rv_cor" option.
