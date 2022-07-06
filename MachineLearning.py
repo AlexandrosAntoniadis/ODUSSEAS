@@ -195,19 +195,19 @@ def ML(regression, reference):
             wide_error_Teff = ((np.std(Teff_list))**2 + (80)**2)**(1/2)         
         
         if resolution[i]=='115000' and reference=='interferometry' :
-            wide_error_FeH = ((np.std(FeH_list))**2 + (0.07)**2)**(1/2)
+            wide_error_FeH = ((np.std(FeH_list))**2 + (0.06)**2)**(1/2)
             wide_error_Teff = ((np.std(Teff_list))**2 + (90)**2)**(1/2)
         elif resolution[i]=='110000' and reference=='interferometry' :
-            wide_error_FeH = ((np.std(FeH_list))**2 + (0.07)**2)**(1/2)
-            wide_error_Teff = ((np.std(Teff_list))**2 + (91)**2)**(1/2)
+            wide_error_FeH = ((np.std(FeH_list))**2 + (0.06)**2)**(1/2)
+            wide_error_Teff = ((np.std(Teff_list))**2 + (92)**2)**(1/2)
         elif resolution[i]=='94600' and reference=='interferometry' :
-            wide_error_FeH = ((np.std(FeH_list))**2 + (0.08)**2)**(1/2)
-            wide_error_Teff = ((np.std(Teff_list))**2 + (93)**2)**(1/2)
+            wide_error_FeH = ((np.std(FeH_list))**2 + (0.06)**2)**(1/2)
+            wide_error_Teff = ((np.std(Teff_list))**2 + (95)**2)**(1/2)
         elif resolution[i]=='75000' and reference=='interferometry' :
-            wide_error_FeH = ((np.std(FeH_list))**2 + (0.08)**2)**(1/2)
+            wide_error_FeH = ((np.std(FeH_list))**2 + (0.07)**2)**(1/2)
             wide_error_Teff = ((np.std(Teff_list))**2 + (97)**2)**(1/2)
         elif resolution[i]=='48000' and reference=='interferometry' :
-            wide_error_FeH = ((np.std(FeH_list))**2 + (0.08)**2)**(1/2)
+            wide_error_FeH = ((np.std(FeH_list))**2 + (0.07)**2)**(1/2)
             wide_error_Teff = ((np.std(Teff_list))**2 + (99)**2)**(1/2)
         
         
