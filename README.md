@@ -13,7 +13,7 @@ Python 3, pandas version 0.20 (this specific version is needed, so in a command 
 "ODUSSEAS.py" is the code we run.
 
 We select the methods by which the reference parameters have been derived, using the setting "reference".
-This can be: 'photometry' which uses as reference dataset 65 stars with photometric scales of Teff by Casagrande et al (2008) and [Fe/H] by Neves et al (2012), or 'interferometry' which uses as reference dataset 47 stars with interferometric calibration of Teff by Khata et al (2021) and the calibration of [Fe/H] by Neves et al (2014).
+This can be: 'photometry' which uses as reference dataset 65 stars with photometric scales of Teff by Casagrande et al (2008) and [Fe/H] by Neves et al (2012), or 'interferometry' which uses as reference dataset 47 stars with interferometry-based Teff by Khata et al (2021) and Rabus et al (2019) and  [Fe/H] derived with the method by Neves et al (2012) using the updated parallaxes from Gaia DR3.
 We can set the regression type using the setting "regression".
 This can be: 'ridge' (recommended), 'ridgecv', 'linear', 'multitasklasso', 'multitaskelasticnet'
 We can also choose to do r.v. correction to our spectra if they are shifted, by setting to 'yes' the "do_rv_cor" option.
@@ -30,8 +30,8 @@ Output: A text file named "Parameter_Results.dat" is created. It contains the av
 
 Demo set: 1D spectra of stars from 5 different spectrographs with different resolutions and respective HARPS datasets for them are provided to use our tool. 
 For comparison, the reference values of the respective HARPS spectra are the following:
-Using the photometric scales of Casagrande08 and Neves12: Gl846 = -0.08 & 3682 ; Gl514 = -0.13 & 3574 ; Gl908 = -0.38 & 3587 ; Gl674 = -0.18 & 3284 and for the HARPS star outside the reference HARPS dataset Gl643 = -0.26 & 3102 by Neves et al (2014).
-Using the calibration scales of Khata21 and Neves14: Gl846 = 0.01 & 3810 ; Gl514 = -0.16 & 3671 ; Gl908 = -0.44 & 3475 ; Gl674 = -0.23 & 3409 ; Gl643 = -0.26 & 3243.
+Using the scales of Casagrande08 and Neves12: Gl846 = -0.08 & 3682 ; Gl514 = -0.13 & 3574 ; Gl908 = -0.38 & 3587 ; Gl674 = -0.18 & 3284 and for the HARPS star outside the reference HARPS dataset Gl643 = -0.26 & 3102 by Neves et al (2014).
+Using the scales of Khata21 & Rabus19 and updated Neves12: Gl846 = -0.07 & 3810 ; Gl514 = -0.15 & 3671 ; Gl908 = -0.40 & 3475 ; Gl674 = -0.19 & 3409 ; Gl643 = -0.32 & 3243.
 
 We already provide precomputed pseudo EWs for a range of spectral resolutions used in popular spectrographs. For completeness, the repository also includes the code "HARPS_dataset.py", which can create a library of M dwarfs from our HARPS sample for any resolution we want to work at (the associated fits files are not uploaded). If you wish to create additional libraries or for any other question, please contact us at : alexandros.antoniadis@astro.up.pt
 
