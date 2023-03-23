@@ -32,7 +32,7 @@ def find_rv(wavelength, flux, mask_lines=[5371.50, 5394.64, 5397.10, 5405.80, 54
   flux_t = flux[ind_wi:ind_wf]
 
 
-  rv, cc = pyasl.crosscorrRV(wave_t, flux_t, wave_mask, flux_mask, -delta_rv, delta_rv, 0.1, skipedge=500)
+  rv, cc = pyasl.crosscorrRV(wave_t, flux_t, wave_mask, flux_mask, -delta_rv, delta_rv, 0.1, skipedge=900)
   maxind = np.argmax(cc)
 
  # plt.figure(1)
