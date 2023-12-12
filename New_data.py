@@ -184,7 +184,7 @@ def EWmeasurements(do_rv_cor):
         
             for j in np.arange(len(wavelength_range)):
                 output[j] = pseudo_EW(fname=filepaths[i], w1=wavelength_range[j,0], w2=wavelength_range[j,1], dw=dw, plot=plot) 
-                
+                print(j)
             print(filepaths[i])
             
             if np.shape(filepaths[i])==(2,):
