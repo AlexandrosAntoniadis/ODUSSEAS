@@ -3,3 +3,9 @@ OLD_HARPS_dataset.py
 OLD_MachineLearning.py
 OLD_NoConvo_New_dataset.py
 OLD_Total_New_dataset.py
+EWmyresults/
+__pycache__/
+spectra/newstars/
+EWmyresults*.dat
+EWmyresults*.csv
+*.dat
