@@ -7,7 +7,7 @@ from astropy.io import fits
 from PyAstronomy import pyasl
 from scipy.interpolate import interp1d
 
-from build_pew import area_between, cut_data, pseudo_EW, read_data
+from build_pew import area_between, cut_data
 
 
 def gaussian(x, mu, sig):
