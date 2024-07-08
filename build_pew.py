@@ -54,11 +54,10 @@ def cut_data(w, f, w1=None, w2=None):
 
 def area_between(f, g, dx):
     h = abs(g - f) / g
-    A = np.trapz(h, dx=dx)
-    return A
+    return np.trapz(h, dx=dx)
 
 
-def pseudo_EW(fname, w1, w2, dw=0.4, plot=False):
+def pseudo_EW(fname, w1, w2, dw=0.4, plot=False, verbose=False):
     wavelength, flux = read_data(fname)
     wavelength, flux = cut_data(wavelength, flux, w1, w2)
 
@@ -92,7 +91,8 @@ def pseudo_EW(fname, w1, w2, dw=0.4, plot=False):
     f = flux[idx]
     g = np.poly1d(g)(x)
     area = area_between(f, g, dx=x[1] - x[0]) * 1000
-    print(r"Area of line: {:.2f}mÅ".format(area))
+    if verbose:
+        print(r"Area of line: {:.2f}mÅ".format(area))
 
     if plot:
         plt.figure(figsize=(8, 4))
