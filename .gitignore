@@ -10,3 +10,4 @@ EWmyresults*.dat
 EWmyresults*.csv
 *.dat
 Model_Prediction_Plots/
+*.lock

@@ -1,13 +1,32 @@
 import os
 from dataclasses import dataclass
-from typing import Dict, Tuple
+from enum import Enum
+from typing import Dict, List, Tuple
 
 import numpy as np
+import pandas as pd
 from astropy.io import fits
 from PyAstronomy import pyasl
 from scipy.interpolate import interp1d
 
-from build_pew import area_between, cut_data
+from odusseas.build_pew import area_between, cut_data
+
+error_matrix = {
+    "photometry": {
+        "115000": (0.10, 65),
+        "110000": (0.10, 68),
+        "94600": (0.12, 77),
+        "75000": (0.13, 78),
+        "48000": (0.13, 80),
+    },
+    "interferometry": {
+        "115000": (0.11, 90),
+        "110000": (0.11, 92),
+        "94600": (0.12, 95),
+        "75000": (0.13, 97),
+        "48000": (0.13, 99),
+    },
+}
 
 
 def gaussian(x, mu, sig):
@@ -54,25 +73,17 @@ def find_rv(
     return rv[maxind]
 
 
-def rv_correction(fname: str, cdelt1=0.010):
-    flux = fits.getdata(fname)
-    hdr = fits.getheader(fname)
-    w0, dw, N = hdr["CRVAL1"], hdr["CDELT1"], hdr["NAXIS1"]
-    wave = w0 + dw * np.arange(N)
+class ReferenceEnum(str, Enum):
+    photometry = "photometry"
+    interferometry = "interferometry"
 
-    rv = find_rv(wave, flux)
 
-    print("RV:", rv)
-
-    wave_rv = wave / (1 + rv / 3.0e5) if abs(rv) > 0 else wave
-
-    f2 = interp1d(wave_rv, flux, kind="linear")
-    wave_int = np.arange(wave_rv[0], wave_rv[-1] - cdelt1, cdelt1)
-    flux_int = f2(wave_int)
-    flux = flux_int
-    hdr["CRVAL1"] = wave_rv[0]
-    hdr["CDELT1"] = cdelt1
-    fits.writeto(fname, flux, hdr, overwrite=True)
+class RegressionEnum(str, Enum):
+    linear = "linear"
+    ridge = "ridge"
+    ridgecv = "ridgecv"
+    multitasklasso = "multitasklasso"
+    multitaskelasticnet = "multitaskelasticnet "
 
 
 @dataclass
@@ -172,23 +183,98 @@ class Spectrum:
         return wavelength_ranges
 
 
-def EWmeasurements(
-    spectra: Dict[str, int], do_rv_cor: bool, verbose: bool = False
-) -> None:
-    dw = 0.4
-    for fname, resolution in spectra.items():
-        spectrum = Spectrum(fname, resolution, do_rv_cor=do_rv_cor)
-        print(f"Calculating EW for {spectrum.name} ...")
-        wavelength_ranges = spectrum.get_wavelength_ranges("lines.rdb")
+@dataclass
+class Reference:
+    resolution: int
+    reference: str
 
-        # Calculate and save the pseudo EWs
-        output = np.zeros(len(wavelength_ranges))
-        for j, wavelength_range in enumerate(wavelength_ranges):
-            output[j] = spectrum.pseudo_EW(
-                wavelength_range=wavelength_range,
-                dw=dw,
-                verbose=verbose,
+    def __post_init__(self) -> None:
+        self.data = []
+        self.header = None
+        with open(self.fname) as f:
+            for i, line in enumerate(f):
+                if i > 0:
+                    self.data.append(line.strip().split(","))
+                else:
+                    self.header = line.strip().split(",")
+        if not self.header:
+            raise ValueError("Header not found")
+        self.data = np.array(self.data)
+
+    @property
+    def fname(self) -> str:
+        return f"reference_data/res{self.resolution}_{self.reference}RefEWPar.csv"
+
+    def subset_with_wavelengths(
+        self, wavelengths: np.ndarray
+    ) -> Tuple[pd.DataFrame, pd.DataFrame]:
+        res = dict()
+        for row, col in zip(self.data.T, self.header):
+            if col in ("names", "FeH", "Teff"):
+                res[col] = row
+                continue
+            wavelength = np.round(np.float64(col), 3)
+            if not wavelength in wavelengths:
+                continue
+            res[wavelength] = row
+        df = pd.DataFrame(res)
+        df_x = df.drop(["names", "FeH", "Teff"], axis=1).astype(float)
+        df_y = df[["names", "FeH", "Teff"]]
+        df_y.loc[:, "FeH"] = df_y["FeH"].astype(float)
+        df_y.loc[:, "Teff"] = df_y["Teff"].astype(float)
+        return df_x, df_y
+
+
+@dataclass
+class Measurement:
+    fname: str
+    resolution: int
+
+    def __post_init__(self) -> None:
+        self.spectrum = Spectrum(self.fname, self.resolution)
+
+        self.newdf = pd.read_csv(
+            os.path.join("results", f"{self.spectrum.name}.dat"),
+            header=None,
+            names=["wavelength", "EW"],
+        )
+        self.newdf.dropna(axis=1, inplace=True)
+        self.newdf[self.newdf.EW > 0.00001]
+        self.newdf.wavelength = self.newdf.wavelength.round(3)
+
+
+@dataclass
+class Result:
+    resolution: str
+    reference: str
+    spectrum: str
+    params_sub_result: Dict[str, List[float]]
+
+    def __str__(self) -> str:
+        d = self.params_sub_result
+        wide_error_FeH = round(
+            (
+                (np.std(d["fehs"])) ** 2
+                + (error_matrix[self.reference][self.resolution][0]) ** 2
             )
+            ** (1 / 2),
+            3,
+        )
+        wide_error_Teff = round(
+            (
+                (np.std(d["teffs"])) ** 2
+                + (error_matrix[self.reference][self.resolution][1]) ** 2
+            )
+            ** (1 / 2),
+            3,
+        )
+        feh_mean = round(np.mean(d["fehs"]), 3)
+        feh_std = round(np.std(d["fehs"]), 3)
+        feh_mae = round(np.mean(d["feh_maes"]), 3)
+        teff_mean = int(np.mean(d["teffs"]))
+        teff_std = int(np.std(d["teffs"]))
+        teff_mae = int(np.mean(d["teff_maes"]))
+        r2_mean = round(np.mean(d["r2scores"]), 3)
+        var_mean = round(np.mean(d["variances"]), 3)
 
-        wcentral = np.array([(w[0] + w[1]) / 2 for w in wavelength_ranges])
-        spectrum.save_pseudo_EW(output, wcentral)
+        return f"{self.spectrum} {feh_mean} {feh_std} {feh_mae} {wide_error_FeH} {teff_mean} {teff_std} {teff_mae} {wide_error_Teff} {r2_mean} {var_mean}\n"

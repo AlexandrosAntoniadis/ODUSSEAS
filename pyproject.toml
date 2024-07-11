@@ -1,0 +1,36 @@
+[project]
+name = "odusseas"
+version = "0.1.0"
+description = "A Machine-Learning Tool for the derivation of Teff and [Fe/H] of M Dwarf stars"
+authors = [
+    { name = "Alexandros Antoniadis-Karnavas", email = "alexandros.antoniadis@astro.up.pt" },
+    { name = "Daniel T. Andreasen", email = "daniel@hermod.space" }
+]
+dependencies = [
+    "typer>=0.12.3",
+    "pyastronomy>=0.21.0",
+    "astropy>=6.1.1",
+    "matplotlib>=3.9.1",
+    "pandas>=2.2.2",
+    "scikit-learn>=1.5.1",
+    "scipy>=1.14.0",
+]
+readme = "README.md"
+requires-python = ">= 3.8"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project.scripts]
+odusseas = "odusseas.main:app"
+
+[tool.rye]
+managed = true
+dev-dependencies = []
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/odusseas"]
