@@ -48,9 +48,15 @@ for each star).
 
 ## Installation
 It is recommended to install this package in a virtual environment following
-with the command `pip install -r requirements.txt`. A recent version of python
-should work, but do let us now if you have any issues installing and running
-the code.
+with the command `pip install
+git+https://github.com/AlexandrosAntoniadis/ODUSSEAS`. A recent version of
+python should work, but do let us now if you have any issues installing and
+running the code.
+
+If you install the code as described above, you also need to download the
+reference data found in the folder `reference_data/` and `lines.rdb`here on
+github. To run the example, you also need to download the dataset found in the
+folder `spectra/newstars/` and the `1Dfilelist.dat`.
 
 
 ## Documentation
