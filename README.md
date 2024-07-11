@@ -8,9 +8,9 @@ https://doi.org/10.1051/0004-6361/201937194
 
 ## Usage
 ```bash
-$ python ODUSSEAS.py --help
+$ odusseas --help
 
- Usage: ODUSSEAS.py [OPTIONS] INPUT_SPECTRA
+ Usage: odusseas [OPTIONS] INPUT_SPECTRA
 
  Run ODUSSEAS with the arguments as listed below
 
@@ -38,7 +38,7 @@ $ python ODUSSEAS.py --help
 
 ### Example
 ```bash
-$ python ODUSSEAS.py 1Dfilelist.dat
+$ odusseas 1Dfilelist.dat
 ```
 This should run the example provided with the code. It should output the
 results from 5 spectra in the folders `results/` (the pseudo EWs measured for
