@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Dict
 
 import numpy as np
@@ -12,7 +13,9 @@ def EWmeasurements(
     for fname, resolution in spectra.items():
         spectrum = Spectrum(fname, resolution, do_rv_cor=do_rv_cor)
         print(f"Calculating EW for {spectrum.name} ...")
-        wavelength_ranges = spectrum.get_wavelength_ranges("lines.rdb")
+        wavelength_ranges = spectrum.get_wavelength_ranges(
+            Path(__file__).parent / "lines.rdb"
+        )
 
         # Calculate and save the pseudo EWs
         output = np.zeros(len(wavelength_ranges))

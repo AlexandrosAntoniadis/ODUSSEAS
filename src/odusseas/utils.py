@@ -1,6 +1,7 @@
 import os
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 from typing import Dict, List, Tuple
 
 import numpy as np
@@ -203,7 +204,10 @@ class Reference:
 
     @property
     def fname(self) -> str:
-        return f"reference_data/res{self.resolution}_{self.reference}RefEWPar.csv"
+        return (
+            Path(__file__).parent
+            / f"reference_data/res{self.resolution}_{self.reference}RefEWPar.csv"
+        )
 
     def subset_with_wavelengths(
         self, wavelengths: np.ndarray

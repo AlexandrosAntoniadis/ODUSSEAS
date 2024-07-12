@@ -33,4 +33,9 @@ dev-dependencies = []
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/odusseas"]
+packages = ["src/odusseas", "reference_data/*.csv", "lines.rdb"]
+
+[tool.hatch.build.targets.wheel.sources]
+"src" = ""
+"reference_data" = "src/odusseas/reference_data"
+"lines.rdb" = "src/odusseas/lines.rdb"
