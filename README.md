@@ -48,19 +48,16 @@ for each star).
 
 ## Installation
 It is recommended to install this package in a virtual environment following
-with the command `pip install
-git+https://github.com/AlexandrosAntoniadis/ODUSSEAS`. A recent version of
-python should work, but do let us now if you have any issues installing and
-running the code.
-
-If you install the code as described above, you also need to download the
-reference data found in the folder `reference_data/` and `lines.rdb`here on
-github. To run the example, you also need to download the dataset found in the
-folder `spectra/newstars/` and the `1Dfilelist.dat`.
+with the command
+```bash
+$ pip install git+https://github.com/AlexandrosAntoniadis/ODUSSEAS
+```
+A recent version of python should work, but do let us now if you have any
+issues installing and running the code.
 
 
 ## Documentation
-`ODUSSEAS.py` is the code we run.
+`odusseas` is the code we run.
 
 We select the methods by which the reference parameters have been derived, using the setting `reference`.
 This can be: `photometry` which uses as reference dataset 65 stars with photometric scales of Teff by Casagrande et al (2008) and [Fe/H] by Neves et al (2012), or `interferometry` (regarded as the new version of ODUSSEAS) which uses as reference dataset 47 stars with interferometry-based Teff by Khata et al (2021) and Rabus et al (2019) and  [Fe/H] derived with the method by Neves et al (2012) using the updated parallaxes from Gaia DR3.
