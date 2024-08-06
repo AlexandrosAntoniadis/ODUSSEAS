@@ -1,7 +1,5 @@
-import os
 from typing import Dict
 
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn import linear_model
@@ -10,23 +8,6 @@ from sklearn.metrics import explained_variance_score, r2_score
 from sklearn.model_selection import train_test_split
 
 from odusseas.utils import Measurement, Reference, Result
-
-
-def make_plot(x, y, extra_coords, title, xlabel, ylabel, figsize, fout):
-    set_res = 15
-    plt.clf()
-    _, ax = plt.subplots(figsize=figsize)
-    if title:
-        ax.set_title(title, fontsize=set_res * 1.5)
-    ax.set_xlabel(xlabel, fontsize=set_res * 1.5)
-    ax.set_ylabel(ylabel, fontsize=set_res * 1.5)
-    ax.plot(*extra_coords, "--b", lw=2)
-    ax.plot(x, y, "ko")
-    ax.tick_params(axis="both", labelsize=set_res * 1.5)
-    ax.spines["right"].set_visible(True)
-    ax.spines["top"].set_visible(True)
-    plt.savefig(fout, bbox_inches="tight")
-    plt.close()
 
 
 def mean_abso_error(y_true, y_pred):
@@ -50,8 +31,6 @@ def get_regression_model(name: str) -> LinearModel:
 
 def ML(spectra: Dict[str, int], regression: str, reference: str) -> None:
     reg = get_regression_model(regression)
-    plots = "Model_Prediction_Plots"
-    os.makedirs(plots, exist_ok=True)
 
     results = []
     for fname, resolution in spectra.items():
@@ -119,52 +98,6 @@ def ML(spectra: Dict[str, int], regression: str, reference: str) -> None:
             result.params_sub_result["variances"].append(variancescore)
 
         results.append(result)
-
-        # plots of the FeH test
-        set_res = 15
-        make_plot(
-            x=test_predvalues.values[:, 1],
-            y=test_givenvalues.values[:, 1],
-            extra_coords=[(-0.8, 0.4), (-0.8, 0.4)],
-            title="[Fe/H] model testing",
-            xlabel="M.L. [Fe/H] [dex]",
-            ylabel="Ref. [Fe/H] [dex]",
-            figsize=(set_res * 0.8, set_res * 0.5),
-            fout=f"{plots}/{spectrum.name}_FeH_test_comparison.pdf",
-        )
-
-        make_plot(
-            x=test_predvalues.values[:, 1],
-            y=test_predvalues.values[:, 1] - test_givenvalues.values[:, 1],
-            extra_coords=[(-0.8, 0.4), (0, 0)],
-            title=None,
-            xlabel="M.L. [Fe/H] [dex]",
-            ylabel=r"$\Delta$[Fe/H] [dex]",
-            figsize=(set_res * 0.8, set_res * 0.2),
-            fout=f"{plots}/{spectrum.name}_Diff_FeH_test_comparison.pdf",
-        )
-
-        make_plot(
-            x=test_predvalues.values[:, 2],
-            y=test_givenvalues.values[:, 2],
-            extra_coords=[(2700, 4000), (2700, 4000)],
-            title=r"T$_{\mathrm{eff}}$ model testing",
-            xlabel=r"M.L. T$_{\mathrm{eff}}$ [K]",
-            ylabel=r"Ref. T$_{\mathrm{eff}}$ [K]",
-            figsize=(set_res * 0.8, set_res * 0.5),
-            fout=f"{plots}/{spectrum.name}_Teff_test_comparison.pdf",
-        )
-
-        make_plot(
-            x=test_predvalues.values[:, 2],
-            y=test_predvalues.values[:, 2] - test_givenvalues.values[:, 2],
-            extra_coords=[(2700, 4000), (0, 0)],
-            title=None,
-            xlabel=r"M.L. T$_{\mathrm{eff}}$ [K]",
-            ylabel=r"$\Delta$T$_{\mathrm{eff}}$ [K]",
-            figsize=(set_res * 0.8, set_res * 0.2),
-            fout=f"{plots}/{spectrum.name}_Diff_Teff_test_comparison.pdf",
-        )
 
     # Save all the results
     with open("Parameter_Results.dat", "w") as fh:
