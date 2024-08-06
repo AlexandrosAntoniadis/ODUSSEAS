@@ -1,0 +1,7 @@
+PyAstronomy
+astropy
+numpy
+pandas
+scikit-learn
+scipy
+typer

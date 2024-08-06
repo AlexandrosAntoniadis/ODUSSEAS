@@ -4,8 +4,9 @@ import numpy as np
 import pandas as pd
 from astropy.io import fits
 from PyAstronomy import pyasl
+from scipy.interpolate import interp1d
 
-from build_pew import pseudo_EW
+from odusseas.build_pew import area_between, cut_data
 
 convolve_now = "yes"  # convolve now if you want to add a new resolution dataset
 resolution = 75000  # set the resolution that you want to convolve the HARPS stars.
@@ -56,6 +57,61 @@ def Load_Data_Pairs(data1):
     return our_data, our_datanames
 
 
+def read_data(fname):
+    if np.shape(fname) == (2,):
+        fname = fname[0]
+    flux = fits.getdata(fname)
+    hdr = fits.getheader(fname)
+    w0, dw, N = hdr["CRVAL1"], hdr["CDELT1"], hdr["NAXIS1"]
+    wavelength = w0 + dw * np.arange(N)
+
+    if round(dw, 4) != 0.010:
+        cdelt1 = 0.010
+        f2 = interp1d(wavelength, flux, kind="linear")
+        wavelength = np.arange(wavelength[0], wavelength[-1], cdelt1)
+        flux = f2(wavelength)
+
+    return wavelength, flux
+
+
+def pseudo_EW(fname, w1, w2, dw=0.4):
+    wavelength, flux = read_data(fname)
+    wavelength, flux = cut_data(wavelength, flux, w1, w2)
+
+    # Find central wavelength
+    idx_fmin = np.argmin(flux)
+    critical_wl = wavelength[idx_fmin]
+
+    # Work on left side
+    wavelength_left, flux_left = cut_data(
+        wavelength, flux, critical_wl - dw, critical_wl
+    )
+    idx_left = np.argmax(flux_left)
+    wl_max_flux_left = wavelength_left[idx_left]
+    fl_max_flux_left = flux_left[idx_left]
+
+    # Work on right side
+    wavelength_right, flux_right = cut_data(
+        wavelength, flux, critical_wl, critical_wl + dw
+    )
+    idx_right = np.argmax(flux_right)
+    wl_max_flux_right = wavelength_right[idx_right]
+    fl_max_flux_right = flux_right[idx_right]
+
+    # set the area
+    x1, x2 = wl_max_flux_left, wl_max_flux_right
+    y1, y2 = fl_max_flux_left, fl_max_flux_right
+    g = np.polyfit([x1, x2], [y1, y2], deg=1)
+    N = len(flux_left[idx_left::]) + len(flux_right[0:idx_right])
+    x = np.linspace(x1, x2, N)
+    idx = (x1 <= wavelength) & (wavelength <= x2)
+    f = flux[idx]
+    g = np.poly1d(g)(x)
+    area = area_between(f, g, dx=x[1] - x[0]) * 1000
+    print(r"Area of line: {:.2f}mÅ".format(area))
+    return area
+
+
 filepaths = np.loadtxt("RefHARPSfilelist.dat", dtype=str)
 
 if convolve_now == "yes":
@@ -103,7 +159,6 @@ for i in np.arange(size_of_filepaths):
             w1=wavelength_range[j, 0],
             w2=wavelength_range[j, 1],
             dw=dw,
-            plot=plot,
         )
     np.savetxt(
         "./"
@@ -120,10 +175,7 @@ myData = "res" + resonumber + "RefHARPS_EWmyresults"
 our_data, our_datanames = Load_Data_Pairs(myData)
 
 
-wavelength_range = np.loadtxt("lines.rdb", skiprows=2)
-
 wcentral = np.empty(len(wavelength_range))
-
 for i in np.arange(len(wavelength_range)):
     winit = wavelength_range[i, 0]
     wfin = wavelength_range[i, 1]
@@ -133,14 +185,10 @@ lines = np.loadtxt("centrallines.dat")
 table = np.empty((len(lines), len(our_datanames) + 1))
 table[:, 0] = lines
 
-
 headers = "names"
 
 for i in range(len(our_datanames)):
     headers = headers + "," + our_datanames[i]
-
-
-for i in range(len(our_datanames)):
     table[:, 1 + i] = our_data[i]
 
 
