@@ -91,7 +91,6 @@ class RegressionEnum(str, Enum):
 class Spectrum:
     fname: str
     resolution: int
-    do_rv_cor: bool = False
 
     def __post_init__(self):
         self.flux = fits.getdata(self.fname)
@@ -104,14 +103,11 @@ class Spectrum:
             self.wavelength = np.arange(self.wavelength[0], self.wavelength[-1], cdelt1)
             self.flux = f2(self.wavelength)
 
-        if self.do_rv_cor:
-            rv = find_rv(self.wavelength, self.flux)
-            wave_rv = (
-                self.wavelength / (1 + rv / 3.0e5) if abs(rv) > 0 else self.wavelength
-            )
-            f2 = interp1d(wave_rv, self.flux, kind="linear")
-            self.wavelength = np.arange(wave_rv[0], wave_rv[-1] - cdelt1, cdelt1)
-            self.flux = f2(self.wavelength)
+        rv = find_rv(self.wavelength, self.flux)
+        wave_rv = self.wavelength / (1 + rv / 3.0e5) if abs(rv) > 0 else self.wavelength
+        f2 = interp1d(wave_rv, self.flux, kind="linear")
+        self.wavelength = np.arange(wave_rv[0], wave_rv[-1] - cdelt1, cdelt1)
+        self.flux = f2(self.wavelength)
 
     @property
     def name(self) -> str:

@@ -6,12 +6,10 @@ import numpy as np
 from odusseas.utils import Spectrum
 
 
-def EWmeasurements(
-    spectra: Dict[str, int], do_rv_cor: bool, verbose: bool = False
-) -> None:
+def EWmeasurements(spectra: Dict[str, int], verbose: bool = False) -> None:
     dw = 0.4
     for fname, resolution in spectra.items():
-        spectrum = Spectrum(fname, resolution, do_rv_cor=do_rv_cor)
+        spectrum = Spectrum(fname, resolution)
         print(f"Calculating EW for {spectrum.name} ...")
         wavelength_ranges = spectrum.get_wavelength_ranges(
             Path(__file__).parent / "lines.rdb"

@@ -24,7 +24,6 @@ def main(
             help="choose the ML model. Recommended: ridge", case_sensitive=False
         ),
     ] = RegressionEnum.ridge,
-    rv_cor: Annotated[bool, typer.Option()] = True,
     verbose: Annotated[bool, typer.Option()] = False,
     skip_ew_measurements: Annotated[
         bool,
@@ -40,7 +39,7 @@ def main(
             fname, resolution = spectrum.strip().split(" ")
             spectra[fname] = resolution
     if not skip_ew_measurements:
-        spec_utils.EWmeasurements(spectra, rv_cor, verbose)
+        spec_utils.EWmeasurements(spectra, verbose)
     machinelearning.ML(spectra, regression.value, reference.value)
 
 

@@ -26,7 +26,6 @@ $ ODUSSEAS --help
 │                                                                                                     [default: interferometry]                    │
 │ --regression                                           [linear|ridge|ridgecv|multitasklasso|multit  choose the ML model. Recommended: ridge      │
 │                                                        askelasticnet ]                              [default: ridge]                             │
-│ --rv-cor                  --no-rv-cor                                                               [default: rv-cor]                            │
 │ --verbose                 --no-verbose                                                              [default: no-verbose]                        │
 │ --skip-ew-measurements    --no-skip-ew-measurements                                                 If this step is already done, then it can be │
 │                                                                                                     skipped in further analysis, as it is a but  │
@@ -63,7 +62,6 @@ We select the methods by which the reference parameters have been derived, using
 This can be: `photometry` which uses as reference dataset 65 stars with photometric scales of Teff by Casagrande et al (2008) and [Fe/H] by Neves et al (2012), or `interferometry` (regarded as the new version of ODUSSEAS) which uses as reference dataset 47 stars with interferometry-based Teff by Khata et al (2021) and Rabus et al (2019) and  [Fe/H] derived with the method by Neves et al (2012) using the updated parallaxes from Gaia DR3.
 We can set the regression type using the setting `regression`.
 This can be: `ridge` (recommended), `ridgecv`, `linear`, `multitasklasso`, `multitaskelasticnet`
-We can also choose to do r.v. correction to our spectra if they are shifted, by setting the `rv_cor` option.
 
 Input: inside a folder with the path "spectra/newstars/", there should be the fits files of the 1D spectra of the unknown stars. Their filepaths should be written in a text in same format as `1Dfilelist.dat`, and next to them the resolution of each spectrum. See example below:
 
