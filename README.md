@@ -8,9 +8,9 @@ https://doi.org/10.1051/0004-6361/201937194
 
 ## Usage
 ```bash
-$ odusseas --help
+$ ODUSSEAS --help
 
- Usage: odusseas [OPTIONS] INPUT_SPECTRA
+ Usage: ODUSSEAS [OPTIONS] INPUT_SPECTRA
 
  Run ODUSSEAS with the arguments as listed below
 
@@ -38,7 +38,7 @@ $ odusseas --help
 
 ### Example
 ```bash
-$ odusseas 1Dfilelist.dat
+$ ODUSSEAS 1Dfilelist.dat
 ```
 This should run the example provided with the code. It should output the
 results from 5 spectra in the folders `results/` (the pseudo EWs measured for
@@ -57,7 +57,7 @@ issues installing and running the code.
 
 
 ## Documentation
-`odusseas` is the code we run.
+`ODUSSEAS` is the code we run.
 
 We select the methods by which the reference parameters have been derived, using the setting `reference`.
 This can be: `photometry` which uses as reference dataset 65 stars with photometric scales of Teff by Casagrande et al (2008) and [Fe/H] by Neves et al (2012), or `interferometry` (regarded as the new version of ODUSSEAS) which uses as reference dataset 47 stars with interferometry-based Teff by Khata et al (2021) and Rabus et al (2019) and  [Fe/H] derived with the method by Neves et al (2012) using the updated parallaxes from Gaia DR3.

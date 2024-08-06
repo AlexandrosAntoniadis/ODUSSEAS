@@ -23,7 +23,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project.scripts]
-odusseas = "odusseas.main:app"
+ODUSSEAS = "odusseas.main:app"
 
 [tool.rye]
 managed = true
