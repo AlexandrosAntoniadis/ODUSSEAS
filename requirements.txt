@@ -1,6 +1,5 @@
 PyAstronomy
 astropy
-matplotlib
 numpy
 pandas
 scikit-learn
