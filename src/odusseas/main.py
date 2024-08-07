@@ -28,7 +28,7 @@ def main(
     skip_ew_measurements: Annotated[
         bool,
         typer.Option(
-            help="If this step is already done, then it can be skipped in further analysis, as it is a but slow"
+            help="If this step is already done, then it can be skipped in further analysis, as it is a bit slow"
         ),
     ] = False,
 ):
