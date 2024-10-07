@@ -99,13 +99,13 @@ class Spectrum:
         cdelt1 = 0.010
         self.wavelength = w0 + dw * np.arange(N)
         if round(dw, 4) != 0.010:
-            f2 = interp1d(self.wavelength, self.flux, kind="linear")
+            f2 = interp1d(self.wavelength, self.flux, kind="linear", fill_value="extrapolate")
             self.wavelength = np.arange(self.wavelength[0], self.wavelength[-1], cdelt1)
             self.flux = f2(self.wavelength)
 
         rv = find_rv(self.wavelength, self.flux)
         wave_rv = self.wavelength / (1 + rv / 3.0e5) if abs(rv) > 0 else self.wavelength
-        f2 = interp1d(wave_rv, self.flux, kind="linear")
+        f2 = interp1d(wave_rv, self.flux, kind="linear", fill_value="extrapolate")
         self.wavelength = np.arange(wave_rv[0], wave_rv[-1] - cdelt1, cdelt1)
         self.flux = f2(self.wavelength)
 
