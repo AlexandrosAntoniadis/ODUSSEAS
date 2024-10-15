@@ -2,9 +2,11 @@
 ## A Machine-Learning tool to derive Teff and [Fe/H] of M Dwarf stars
 ## [UPGRADED VERSION]
 
-IF YOU USE THIS TOOL IN YOUR RESEARCH, PLEASE CITE THE CORRESPONDING PAPER:
+IF YOU USE THE TOOL ODUSSEAS IN YOUR RESEARCH, PLEASE CITE, 1. THE PAPER OF ITS UPGRADED VERSION (FOR THE PARAMETER DETERMINATION) AND 2. THE PAPER OF ITS ORIGINAL CREATION (FOR THE METHOD DESCRIPTION), RESPECTIVELY:
 
-https://doi.org/10.1051/0004-6361/201937194
+1) https://doi.org/10.1051/0004-6361/202450722
+
+2) https://doi.org/10.1051/0004-6361/201937194
 
 
 ## Usage
@@ -112,4 +114,4 @@ the code `src/odusseas/examples/HARPS_dataset.py`, which can create a library
 of M dwarfs from our HARPS sample for any resolution we want to work at (the
 associated fits files are not uploaded). If you wish to create additional
 libraries or for any other question, please contact us at:
-alexandros.antoniadis@astro.up.pt or open an issue on Github.
+alexandros.antoniadis88@gmail.com or open an issue on Github.
