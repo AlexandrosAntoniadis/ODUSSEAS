@@ -260,20 +260,22 @@ class Result:
             ** (1 / 2),
             3,
         )
-        wide_error_Teff = round(
-            (
-                (np.std(d["teffs"])) ** 2
-                + (error_matrix[self.reference][self.resolution][1]) ** 2
+        wide_error_Teff = int(
+            round(
+                (
+                    (np.std(d["teffs"])) ** 2
+                    + (error_matrix[self.reference][self.resolution][1]) ** 2
+                )
+                ** (1 / 2),
+                0,
             )
-            ** (1 / 2),
-            3,
         )
         feh_mean = round(np.mean(d["fehs"]), 3)
         feh_std = round(np.std(d["fehs"]), 3)
         feh_mae = round(np.mean(d["feh_maes"]), 3)
-        teff_mean = int(np.mean(d["teffs"]))
-        teff_std = int(np.std(d["teffs"]))
-        teff_mae = int(np.mean(d["teff_maes"]))
+        teff_mean = int(round(np.mean(d["teffs"]), 0))
+        teff_std = int(round(np.std(d["teffs"]), 0))
+        teff_mae = int(round(np.mean(d["teff_maes"]), 0))
         r2_mean = round(np.mean(d["r2scores"]), 3)
         var_mean = round(np.mean(d["variances"]), 3)
 
