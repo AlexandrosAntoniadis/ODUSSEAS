@@ -1,6 +1,6 @@
 [project]
 name = "odusseas"
-version = "0.1.0"
+version = "2.0"
 description = "A Machine-Learning Tool for the derivation of Teff and [Fe/H] of M Dwarf stars"
 authors = [
     { name = "Alexandros Antoniadis-Karnavas", email = "alexandros.antoniadis88@gmail.com" },
