@@ -67,6 +67,9 @@ def ML(spectra: Dict[str, int], regression: str, reference: str) -> None:
             y_train.drop(["names"], axis=1, inplace=True)
             y_test.drop(["names"], axis=1, inplace=True)
 
+            y_train = y_train.astype(float)
+            y_test = y_test.astype(float)
+
             reg.fit(x_train.values, y_train)
 
             y_pred_test = reg.predict(x_test.values)
