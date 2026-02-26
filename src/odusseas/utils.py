@@ -221,7 +221,7 @@ class Reference:
         df_x = df.drop(["names", "FeH", "Teff"], axis=1).astype(float)
         df_y = df[["names", "FeH", "Teff"]]
         df_y["FeH"] = df_y["FeH"].astype(float).to_numpy()
-        df_y["TeffFeH"] = df_y["Teff"].astype(float).to_numpy()
+        df_y["Teff"] = df_y["Teff"].astype(float).to_numpy()
         return df_x, df_y
 
 
