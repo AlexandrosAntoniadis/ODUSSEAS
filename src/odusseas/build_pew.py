@@ -12,4 +12,4 @@ def cut_data(w, f, w1=None, w2=None):
 
 def area_between(f, g, dx):
     h = abs(g - f) / g
-    return np.trapz(h, dx=dx)
+    return np.trapezoid(h, dx=dx)
